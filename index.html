@@ -2247,30 +2247,44 @@
 
         showClientQR(clientId) {
             const client = this.clients.find(c => c.id === clientId);
-            if (!client) return;
-
-            const url = window.location.href.split('?')[0] + `?client=${clientId}`;
-            const canvasContainer = document.getElementById('clientQRCanvas');
-            canvasContainer.innerHTML = '';
-            const canvas = document.createElement('canvas');
-            canvasContainer.appendChild(canvas);
-
-            document.getElementById('clientQRName').textContent = `客户：${client.data.name || '未命名'}`;
-
-            if (typeof QRCode !== 'undefined') {
-                QRCode.toCanvas(canvas, url, {
-                    width: 180,
-                    margin: 2,
-                    color: { dark: '#0f172a', light: '#ffffff' }
-                }, (error) => {
-                    if (error) {
-                        console.error('客户二维码生成失败:', error);
-                        canvasContainer.innerHTML = '<p style="color: var(--danger);">二维码生成失败</p>';
-                    }
-                });
+            if (!client) {
+                this.showToast('error', '未找到该客户');
+                return;
             }
 
+            const baseUrl = window.location.href.split('?')[0].split('#')[0];
+            const url = baseUrl + `?client=${clientId}`;
+            const canvasContainer = document.getElementById('clientQRCanvas');
+            const qrName = document.getElementById('clientQRName');
+
+            canvasContainer.innerHTML = '<p style="color: var(--text-secondary);">正在生成二维码...</p>';
+            qrName.textContent = `客户：${client.data.name || '未命名'}`;
+
             document.getElementById('clientQRModal').classList.add('show');
+
+            if (typeof QRCode === 'undefined') {
+                canvasContainer.innerHTML = '<p style="color: var(--danger);">二维码库加载失败，请刷新页面重试</p>';
+                return;
+            }
+
+            try {
+                QRCode.toDataURL(url, {
+                    width: 180,
+                    margin: 2,
+                    color: { dark: '#0f172a', light: '#ffffff' },
+                    errorCorrectionLevel: 'H'
+                }, (error, urlData) => {
+                    if (error) {
+                        console.error('二维码生成失败:', error);
+                        canvasContainer.innerHTML = `<p style="color: var(--danger);">生成失败: ${error.message || '未知错误'}</p>`;
+                    } else {
+                        canvasContainer.innerHTML = `<img src="${urlData}" style="width: 180px; height: 180px; border-radius: 8px;" alt="客户二维码">`;
+                    }
+                });
+            } catch (e) {
+                console.error('二维码生成异常:', e);
+                canvasContainer.innerHTML = `<p style="color: var(--danger);">生成异常: ${e.message}</p>`;
+            }
         }
 
         checkQRParams() {
