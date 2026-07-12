@@ -307,6 +307,7 @@
                     <div style="display:flex;gap:10px;">
                         <button class="btn btn-primary" onclick="app.saveCurrentClient()"><i class="fas fa-save"></i> 保存</button>
                         <button class="btn btn-success" id="completeBtn" style="display:none;" onclick="app.completeQuestionnaire()"><i class="fas fa-check"></i> 完成</button>
+                        <button class="btn btn-warning" id="submitBtn" style="display:none;" onclick="app.showSubmitQR()"><i class="fas fa-paper-plane"></i> 提交</button>
                     </div>
                     <button class="btn btn-primary" id="nextBtn" onclick="app.nextPage()">下一页 <i class="fas fa-chevron-right"></i></button>
                 </div>
@@ -339,6 +340,25 @@
                 <p style="color:#94a3b8;font-size:12px;">扫码即可填写问卷，数据自动同步</p>
             </div>
             <div class="modal-actions"><button class="btn btn-primary" onclick="app.closeModal('clientQRModal')">关闭</button></div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="submitQRModal">
+        <div class="modal" style="max-width:400px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+                <h3><i class="fas fa-check-circle"></i> 问卷已填写完成</h3>
+                <button class="btn btn-outline btn-sm" onclick="app.closeModal('submitQRModal')"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body" style="text-align:center;">
+                <p style="margin-bottom:15px;color:#94a3b8;">请将下方二维码出示给管理员，或导出Excel文件</p>
+                <div id="submitQRCanvas" style="display:inline-block;padding:15px;background:white;border-radius:12px;margin-bottom:15px;"></div>
+                <p style="color:#f1f5f9;font-size:14px;font-weight:600;margin-bottom:5px;" id="submitQRName">客户姓名</p>
+                <p style="color:#94a3b8;font-size:12px;">管理员扫码即可获取您的问卷数据</p>
+            </div>
+            <div class="modal-actions" style="flex-direction:column;gap:10px;">
+                <button class="btn btn-success" onclick="app.exportCurrentClient()"><i class="fas fa-file-excel"></i> 导出Excel发给管理员</button>
+                <button class="btn btn-outline" onclick="app.closeModal('submitQRModal')">关闭</button>
+            </div>
         </div>
     </div>
 
@@ -546,7 +566,8 @@
             document.getElementById('overallProgress').style.width = `${progress}%`;
             document.getElementById('completionRate').textContent = `${progress}%`;
             document.getElementById('currentPageNum').textContent = this.currentPage;
-            document.getElementById('completeBtn').style.display = progress > 50 ? 'inline-flex' : 'none';
+            document.getElementById('completeBtn').style.display = (progress > 50 && !this.clientMode) ? 'inline-flex' : 'none';
+            document.getElementById('submitBtn').style.display = (progress > 50 && this.clientMode) ? 'inline-flex' : 'none';
         }
 
         updatePageNav() {
@@ -771,6 +792,32 @@
             }
         }
 
+        encodeClientData(client) {
+            const payload = {
+                id: client.id,
+                name: client.data?.name || '',
+                phone: client.data?.phone || '',
+                data: client.data || {}
+            };
+            try {
+                return btoa(encodeURIComponent(JSON.stringify(payload)));
+            } catch (e) {
+                return encodeURIComponent(JSON.stringify(payload));
+            }
+        }
+
+        decodeClientData(encoded) {
+            try {
+                return JSON.parse(decodeURIComponent(atob(encoded)));
+            } catch (e1) {
+                try {
+                    return JSON.parse(decodeURIComponent(encoded));
+                } catch (e2) {
+                    return null;
+                }
+            }
+        }
+
         showClientQR(clientId) {
             const client = this.clients.find(c => c.id === clientId);
             if (!client) {
@@ -779,7 +826,8 @@
             }
 
             const baseUrl = window.location.href.split('?')[0].split('#')[0];
-            const url = baseUrl + `?client=${clientId}`;
+            const encodedData = this.encodeClientData(client);
+            const url = baseUrl + `?cd=${encodedData}`;
             const container = document.getElementById('clientQRCanvas');
             
             container.innerHTML = '<p style="color:#94a3b8;">正在生成...</p>';
@@ -795,7 +843,7 @@
                         height: 180,
                         colorDark: '#0f172a',
                         colorLight: '#ffffff',
-                        correctLevel: QRCode.CorrectLevel.H
+                        correctLevel: QRCode.CorrectLevel.M
                     });
                 } catch (e) {
                     console.error('客户二维码生成失败:', e);
@@ -806,8 +854,41 @@
 
         checkQRParams() {
             const params = new URLSearchParams(window.location.search);
+            const clientData = params.get('cd');
             const clientId = params.get('client');
             
+            if (clientData) {
+                const decoded = this.decodeClientData(clientData);
+                if (decoded && decoded.data) {
+                    const existingIndex = this.clients.findIndex(c => c.id === decoded.id);
+                    if (existingIndex >= 0) {
+                        this.clients[existingIndex].data = { ...this.clients[existingIndex].data, ...decoded.data };
+                        this.clients[existingIndex].updatedAt = new Date().toISOString();
+                        this.currentClientId = decoded.id;
+                    } else {
+                        const newClient = {
+                            id: decoded.id || Date.now().toString(),
+                            data: decoded.data || {},
+                            status: 'pending',
+                            createdAt: new Date().toISOString(),
+                            updatedAt: new Date().toISOString(),
+                            fromQR: true
+                        };
+                        this.clients.unshift(newClient);
+                        this.currentClientId = newClient.id;
+                    }
+                    this.saveClients();
+                    this.clientMode = true;
+                    this.loadClientToForm();
+                    this.switchTab('questionnaire');
+                    this.updateCurrentClientInfo();
+                    document.querySelector('.main-tab[data-tab="clients"]').style.display = 'none';
+                    document.querySelector('.main-tab[data-tab="share"]').style.display = 'none';
+                    this.showToast('info', `欢迎，${decoded.data.name || '客户'}！请填写问卷`);
+                    return true;
+                }
+            }
+
             if (clientId) {
                 const client = this.clients.find(c => c.id === clientId);
                 if (client) {
@@ -818,11 +899,10 @@
                     this.updateCurrentClientInfo();
                     document.querySelector('.main-tab[data-tab="clients"]').style.display = 'none';
                     document.querySelector('.main-tab[data-tab="share"]').style.display = 'none';
-                    this.showToast('info', `欢迎，${client.data.name || '客户'}！请填写问卷`);
-                } else {
-                    this.showToast('error', '未找到该客户');
+                    this.showToast('info', `欢迎，${client.data.name || '客户'}！`);
                 }
             }
+            return false;
         }
 
         showToast(type, message) {
@@ -832,6 +912,45 @@
             toast.innerHTML = `<i class="fas fa-${icon}"></i><span>${message}</span>`;
             document.body.appendChild(toast);
             setTimeout(() => toast.remove(), 3000);
+        }
+
+        showSubmitQR() {
+            if (!this.currentClientId) return;
+            const client = this.collectFormData();
+            this.saveClients();
+
+            const baseUrl = window.location.href.split('?')[0].split('#')[0];
+            const encodedData = this.encodeClientData(client);
+            const url = baseUrl + `?cd=${encodedData}`;
+            const container = document.getElementById('submitQRCanvas');
+
+            document.getElementById('submitQRName').textContent = `客户：${client.data.name || '未命名'}`;
+            container.innerHTML = '<p style="color:#94a3b8;">正在生成...</p>';
+            document.getElementById('submitQRModal').classList.add('show');
+
+            setTimeout(() => {
+                try {
+                    container.innerHTML = '';
+                    new QRCode(container, {
+                        text: url,
+                        width: 200,
+                        height: 200,
+                        colorDark: '#0f172a',
+                        colorLight: '#ffffff',
+                        correctLevel: QRCode.CorrectLevel.M
+                    });
+                } catch (e) {
+                    console.error('提交二维码生成失败:', e);
+                    container.innerHTML = `<p style="color:#ef4444;">生成失败</p>`;
+                }
+            }, 100);
+        }
+
+        exportCurrentClient() {
+            const client = this.getCurrentClient();
+            if (!client) return;
+            this.collectFormData();
+            this.doExport([client], `${client.data.name || '客户'}_问卷数据`);
         }
     }
 
