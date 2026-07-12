@@ -3,970 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>九页问卷客户管理系统 - 在线版</title>
+    <title>九页问卷客户管理系统</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.5.3/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        :root {
-            --primary: #00d4ff;
-            --primary-dark: #0099cc;
-            --secondary: #7c3aed;
-            --accent: #f472b6;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --bg-dark: #0f172a;
-            --bg-card: rgba(255, 255, 255, 0.08);
-            --bg-glass: rgba(255, 255, 255, 0.05);
-            --text-primary: #f1f5f9;
-            --text-secondary: #94a3b8;
-            --border-glow: rgba(0, 212, 255, 0.3);
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
-            min-height: 100vh;
-            color: var(--text-primary);
-            overflow-x: hidden;
-        }
-
-        body::before {
-            content: '';
-            position: fixed;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: 
-                radial-gradient(circle at 20% 30%, rgba(124, 58, 237, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 80% 70%, rgba(0, 212, 255, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 50% 50%, rgba(244, 114, 182, 0.08) 0%, transparent 60%);
-            pointer-events: none;
-            z-index: 0;
-            animation: bgFloat 20s ease-in-out infinite;
-        }
-
-        @keyframes bgFloat {
-            0%, 100% { transform: translate(0, 0) rotate(0deg); }
-            33% { transform: translate(-2%, -2%) rotate(1deg); }
-            66% { transform: translate(2%, 2%) rotate(-1deg); }
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 15px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .app-header {
-            background: var(--bg-glass);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 15px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .app-header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.1), transparent);
-            animation: shimmer 3s infinite;
-        }
-
-        @keyframes shimmer {
-            100% { left: 100%; }
-        }
-
-        .app-header h1 {
-            font-size: 1.8em;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 8px;
-            font-weight: 800;
-        }
-
-        .app-header .subtitle {
-            color: var(--text-secondary);
-            font-size: 0.9em;
-        }
-
-        .app-info {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-top: 12px;
-            flex-wrap: wrap;
-            font-size: 0.75em;
-            color: var(--text-secondary);
-        }
-
-        .app-info span {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .app-info i {
-            color: var(--primary);
-        }
-
-        .main-tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-            background: var(--bg-glass);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        .main-tab {
-            flex: 1;
-            padding: 12px 16px;
-            border: none;
-            background: transparent;
-            color: var(--text-secondary);
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-        }
-
-        .main-tab:hover {
-            color: var(--text-primary);
-            background: rgba(255, 255, 255, 0.05);
-        }
-
-        .main-tab.active {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            color: white;
-            box-shadow: 0 4px 20px rgba(0, 212, 255, 0.3);
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-            animation: fadeInUp 0.4s ease;
-        }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .client-panel {
-            background: var(--bg-glass);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 15px;
-        }
-
-        .panel-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .panel-title {
-            font-size: 1.2em;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .panel-title i {
-            color: var(--primary);
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            padding: 10px 18px;
-            border: none;
-            border-radius: 10px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            white-space: nowrap;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            color: white;
-            box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 212, 255, 0.4);
-        }
-
-        .btn-success {
-            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
-            color: white;
-            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
-        }
-
-        .btn-success:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
-        }
-
-        .btn-warning {
-            background: linear-gradient(135deg, var(--warning) 0%, #d97706 100%);
-            color: white;
-            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
-        }
-
-        .btn-warning:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
-        }
-
-        .btn-danger {
-            background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%);
-            color: white;
-            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
-        }
-
-        .btn-danger:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
-        }
-
-        .btn-outline {
-            background: transparent;
-            color: var(--primary);
-            border: 1px solid var(--primary);
-        }
-
-        .btn-outline:hover {
-            background: rgba(0, 212, 255, 0.1);
-        }
-
-        .btn-sm {
-            padding: 6px 12px;
-            font-size: 12px;
-        }
-
-        .filter-bar {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
-        }
-
-        .search-box {
-            flex: 1;
-            min-width: 200px;
-            position: relative;
-        }
-
-        .search-box input {
-            width: 100%;
-            padding: 10px 15px 10px 40px;
-            border: 1px solid #e2e8f0;
-            border-radius: 10px;
-            font-size: 14px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: var(--text-primary);
-            transition: all 0.3s ease;
-        }
-
-        .search-box input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.15);
-        }
-
-        .search-box input::placeholder {
-            color: var(--text-secondary);
-        }
-
-        .search-box i {
-            position: absolute;
-            left: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-secondary);
-        }
-
-        .filter-select {
-            padding: 10px 15px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            font-size: 14px;
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--text-primary);
-            cursor: pointer;
-            min-width: 140px;
-        }
-
-        .filter-select:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
-
-        .client-table-container {
-            overflow-x: auto;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        .client-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 14px;
-        }
-
-        .client-table th {
-            background: linear-gradient(135deg, rgba(0, 212, 255, 0.15) 0%, rgba(124, 58, 237, 0.15) 100%);
-            padding: 12px 15px;
-            text-align: left;
-            font-weight: 600;
-            color: var(--text-primary);
-            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
-            cursor: pointer;
-            user-select: none;
-            white-space: nowrap;
-        }
-
-        .client-table th:hover {
-            background: rgba(0, 212, 255, 0.2);
-        }
-
-        .client-table th .sort-icon {
-            margin-left: 5px;
-            opacity: 0.5;
-            transition: opacity 0.2s;
-        }
-
-        .client-table th.sort-asc .sort-icon,
-        .client-table th.sort-desc .sort-icon {
-            opacity: 1;
-            color: var(--primary);
-        }
-
-        .client-table td {
-            padding: 10px 15px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            color: var(--text-primary);
-        }
-
-        .client-table tr:hover td {
-            background: rgba(255, 255, 255, 0.03);
-        }
-
-        .client-table tr.selected td {
-            background: rgba(0, 212, 255, 0.08);
-        }
-
-        .checkbox-cell {
-            width: 40px;
-            text-align: center;
-        }
-
-        .table-actions {
-            display: flex;
-            gap: 5px;
-        }
-
-        .no-data {
-            text-align: center;
-            padding: 50px 20px;
-            color: var(--text-secondary);
-        }
-
-        .no-data i {
-            font-size: 3em;
-            margin-bottom: 15px;
-            opacity: 0.5;
-        }
-
-        .questionnaire-container {
-            background: var(--bg-glass);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 20px;
-            padding: 20px;
-        }
-
-        .current-client-info {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 20px;
-            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1) 0%, rgba(124, 58, 237, 0.1) 100%);
-            border-radius: 12px;
-            margin-bottom: 20px;
-            border: 1px solid rgba(0, 212, 255, 0.2);
-        }
-
-        .current-client-info .client-name {
-            font-size: 1.1em;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .current-client-info .client-name i {
-            color: var(--primary);
-        }
-
-        .progress-section {
-            margin-bottom: 20px;
-        }
-
-        .progress-bar {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            height: 8px;
-            overflow: hidden;
-            margin-bottom: 8px;
-        }
-
-        .progress-fill {
-            background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
-            height: 100%;
-            width: 0%;
-            transition: width 0.5s ease;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
-        }
-
-        .progress-text {
-            text-align: center;
-            font-size: 0.85em;
-            color: var(--text-secondary);
-        }
-
-        .page-nav {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .page-nav-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            border: 2px solid transparent;
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--text-secondary);
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 14px;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-        }
-
-        .page-nav-btn:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-            transform: scale(1.1);
-        }
-
-        .page-nav-btn.active {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            color: white;
-            border-color: transparent;
-            box-shadow: 0 0 20px rgba(0, 212, 255, 0.4);
-        }
-
-        .page-nav-btn.completed {
-            background: var(--success);
-            color: white;
-            border-color: transparent;
-        }
-
-        .page-nav-btn.completed::after {
-            content: '✓';
-            position: absolute;
-            top: -3px;
-            right: -3px;
-            width: 16px;
-            height: 16px;
-            background: white;
-            color: var(--success);
-            border-radius: 50%;
-            font-size: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-        }
-
-        .page {
-            display: none;
-        }
-
-        .page.active {
-            display: block;
-            animation: pageIn 0.4s ease;
-        }
-
-        @keyframes pageIn {
-            from { opacity: 0; transform: translateX(20px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-        .page-title {
-            font-size: 1.4em;
-            margin-bottom: 20px;
-            text-align: center;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            padding-bottom: 12px;
-            border-bottom: 2px solid rgba(0, 212, 255, 0.2);
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .form-group label {
-            margin-bottom: 6px;
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-secondary);
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .form-group label .required {
-            color: var(--danger);
-        }
-
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            padding: 12px 15px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            font-size: 14px;
-            background: rgba(255, 255, 255, 0.03);
-            color: var(--text-primary);
-            transition: all 0.3s ease;
-            font-family: inherit;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.15);
-            background: rgba(255, 255, 255, 0.06);
-        }
-
-        .form-group input::placeholder,
-        .form-group textarea::placeholder {
-            color: rgba(148, 163, 184, 0.5);
-        }
-
-        .form-group select option {
-            background: #1e293b;
-            color: var(--text-primary);
-        }
-
-        .form-group textarea {
-            resize: vertical;
-            min-height: 80px;
-            line-height: 1.5;
-        }
-
-        .form-group input.error {
-            border-color: var(--danger);
-        }
-
-        .form-group input.success {
-            border-color: var(--success);
-        }
-
-        .full-width {
-            grid-column: 1 / -1;
-        }
-
-        .form-nav {
-            display: flex;
-            justify-content: space-between;
-            gap: 10px;
-            margin-top: 25px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(5px);
-            z-index: 10000;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .modal-overlay.show {
-            display: flex;
-            animation: fadeIn 0.3s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .modal {
-            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-            border-radius: 20px;
-            padding: 30px;
-            max-width: 450px;
-            width: 100%;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            animation: modalIn 0.3s ease;
-        }
-
-        @keyframes modalIn {
-            from { transform: scale(0.9) translateY(20px); opacity: 0; }
-            to { transform: scale(1) translateY(0); opacity: 1; }
-        }
-
-        .modal h3 {
-            font-size: 1.3em;
-            margin-bottom: 20px;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-align: center;
-        }
-
-        .modal-body {
-            margin-bottom: 25px;
-        }
-
-        .modal-actions {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-        }
-
-        .toast {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 15px 25px;
-            border-radius: 12px;
-            color: white;
-            font-weight: 600;
-            z-index: 20000;
-            animation: toastIn 0.3s ease, toastOut 0.3s ease 2.7s forwards;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        }
-
-        @keyframes toastIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-
-        @keyframes toastOut {
-            from { transform: translateX(0); opacity: 1; }
-            to { transform: translateX(100%); opacity: 0; }
-        }
-
-        .toast.success {
-            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
-        }
-
-        .toast.error {
-            background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%);
-        }
-
-        .toast.info {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-        }
-
-        .hidden-input {
-            display: none;
-        }
-
-        .batch-bar {
-            display: none;
-            padding: 12px 20px;
-            background: rgba(0, 212, 255, 0.1);
-            border-radius: 10px;
-            margin-bottom: 15px;
-            border: 1px solid rgba(0, 212, 255, 0.2);
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .batch-bar.show {
-            display: flex;
-        }
-
-        .batch-info {
-            font-size: 14px;
-            color: var(--text-primary);
-        }
-
-        .batch-info strong {
-            color: var(--primary);
-        }
-
-        .stat-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .stat-card {
-            background: var(--bg-glass);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 12px;
-            padding: 15px;
-            text-align: center;
-        }
-
-        .stat-card .stat-icon {
-            font-size: 2em;
-            margin-bottom: 8px;
-        }
-
-        .stat-card .stat-value {
-            font-size: 1.8em;
-            font-weight: 800;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .stat-card .stat-label {
-            font-size: 0.8em;
-            color: var(--text-secondary);
-            margin-top: 4px;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif; background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%); min-height: 100vh; color: #f1f5f9; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 15px; }
+        .app-header { background: rgba(255,255,255,0.05); backdrop-filter: blur(20px); border-radius: 20px; padding: 20px; margin-bottom: 15px; text-align: center; border: 1px solid rgba(255,255,255,0.1); }
+        .app-header h1 { font-size: 1.8em; background: linear-gradient(135deg, #00d4ff, #f472b6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 8px; }
+        .app-header .subtitle { color: #94a3b8; font-size: 0.9em; }
+        .app-info { display: flex; justify-content: center; gap: 15px; margin-top: 12px; font-size: 0.75em; color: #94a3b8; flex-wrap: wrap; }
+        .main-tabs { display: flex; gap: 8px; margin-bottom: 15px; background: rgba(255,255,255,0.05); border-radius: 15px; padding: 6px; }
+        .main-tab { flex: 1; padding: 12px; border: none; background: transparent; color: #94a3b8; border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: 600; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 6px; }
+        .main-tab:hover { color: #f1f5f9; }
+        .main-tab.active { background: linear-gradient(135deg, #00d4ff, #7c3aed); color: white; box-shadow: 0 4px 20px rgba(0,212,255,0.3); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .client-panel { background: rgba(255,255,255,0.05); backdrop-filter: blur(20px); border-radius: 20px; padding: 20px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.08); }
+        .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px; }
+        .panel-title { font-size: 1.2em; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+        .panel-title i { color: #00d4ff; }
+        .btn { padding: 10px 18px; border: none; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.3s; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+        .btn-primary { background: linear-gradient(135deg, #00d4ff, #7c3aed); color: white; }
+        .btn-success { background: linear-gradient(135deg, #10b981, #059669); color: white; }
+        .btn-danger { background: linear-gradient(135deg, #ef4444, #dc2626); color: white; }
+        .btn-outline { background: transparent; color: #00d4ff; border: 1px solid #00d4ff; }
+        .btn-sm { padding: 6px 12px; font-size: 12px; }
+        .filter-bar { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
+        .search-box { flex: 1; min-width: 200px; position: relative; }
+        .search-box input { width: 100%; padding: 10px 15px 10px 40px; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; background: rgba(255,255,255,0.03); color: #f1f5f9; font-size: 14px; }
+        .search-box input:focus { outline: none; border-color: #00d4ff; }
+        .search-box i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #94a3b8; }
+        .filter-select { padding: 10px 15px; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; background: rgba(255,255,255,0.03); color: #f1f5f9; font-size: 14px; }
+        .client-table-container { overflow-x: auto; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); }
+        .client-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        .client-table th { background: rgba(0,212,255,0.1); padding: 12px 15px; text-align: left; font-weight: 600; border-bottom: 2px solid rgba(255,255,255,0.1); cursor: pointer; white-space: nowrap; }
+        .client-table td { padding: 10px 15px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .client-table tr:hover td { background: rgba(255,255,255,0.03); }
+        .table-actions { display: flex; gap: 5px; }
+        .no-data { text-align: center; padding: 50px; color: #94a3b8; }
+        .questionnaire-container { background: rgba(255,255,255,0.05); backdrop-filter: blur(20px); border-radius: 20px; padding: 20px; border: 1px solid rgba(255,255,255,0.08); }
+        .current-client-info { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: rgba(0,212,255,0.1); border-radius: 12px; margin-bottom: 20px; }
+        .client-name { font-size: 1.1em; font-weight: 600; display: flex; align-items: center; gap: 10px; }
+        .client-name i { color: #00d4ff; }
+        .progress-section { margin-bottom: 20px; }
+        .progress-bar { background: rgba(255,255,255,0.1); border-radius: 10px; height: 8px; overflow: hidden; margin-bottom: 8px; }
+        .progress-fill { background: linear-gradient(90deg, #00d4ff, #f472b6); height: 100%; width: 0%; transition: width 0.5s; }
+        .progress-text { text-align: center; font-size: 0.85em; color: #94a3b8; }
+        .page-nav { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; justify-content: center; }
+        .page-nav-btn { width: 40px; height: 40px; border-radius: 50%; border: 2px solid transparent; background: rgba(255,255,255,0.05); color: #94a3b8; cursor: pointer; font-weight: 600; font-size: 14px; transition: all 0.3s; }
+        .page-nav-btn:hover { border-color: #00d4ff; color: #00d4ff; }
+        .page-nav-btn.active { background: linear-gradient(135deg, #00d4ff, #7c3aed); color: white; }
+        .page-nav-btn.completed { background: #10b981; color: white; }
+        .page { display: none; }
+        .page.active { display: block; animation: pageIn 0.3s ease; }
+        @keyframes pageIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+        .page-title { font-size: 1.4em; margin-bottom: 20px; text-align: center; background: linear-gradient(135deg, #00d4ff, #f472b6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; padding-bottom: 12px; border-bottom: 2px solid rgba(0,212,255,0.2); }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .form-group { display: flex; flex-direction: column; }
+        .form-group label { margin-bottom: 6px; font-size: 13px; font-weight: 600; color: #94a3b8; }
+        .form-group input, .form-group select, .form-group textarea { padding: 12px 15px; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; font-size: 14px; background: rgba(255,255,255,0.03); color: #f1f5f9; font-family: inherit; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: #00d4ff; }
+        .form-group textarea { resize: vertical; min-height: 80px; }
+        .full-width { grid-column: 1 / -1; }
+        .form-nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 25px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.08); }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); z-index: 10000; justify-content: center; align-items: center; padding: 20px; }
+        .modal-overlay.show { display: flex; }
+        .modal { background: linear-gradient(135deg, #1e293b, #0f172a); border-radius: 20px; padding: 30px; max-width: 450px; width: 100%; border: 1px solid rgba(255,255,255,0.1); }
+        .modal h3 { font-size: 1.3em; margin-bottom: 20px; text-align: center; background: linear-gradient(135deg, #00d4ff, #f472b6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .modal-body { margin-bottom: 25px; }
+        .modal-actions { display: flex; gap: 10px; justify-content: center; }
+        .toast { position: fixed; top: 20px; right: 20px; padding: 15px 25px; border-radius: 12px; color: white; font-weight: 600; z-index: 20000; animation: toastIn 0.3s ease; display: flex; align-items: center; gap: 10px; }
+        @keyframes toastIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .toast.success { background: linear-gradient(135deg, #10b981, #059669); }
+        .toast.error { background: linear-gradient(135deg, #ef4444, #dc2626); }
+        .toast.info { background: linear-gradient(135deg, #00d4ff, #7c3aed); }
+        .stat-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 20px; }
+        .stat-card { background: rgba(255,255,255,0.05); border-radius: 12px; padding: 15px; text-align: center; }
+        .stat-card .stat-value { font-size: 1.8em; font-weight: 800; background: linear-gradient(135deg, #00d4ff, #f472b6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .stat-card .stat-label { font-size: 0.8em; color: #94a3b8; margin-top: 4px; }
+        .qr-display { display: inline-block; padding: 20px; background: white; border-radius: 15px; margin: 20px 0; }
+        .qr-section { background: rgba(255,255,255,0.05); border-radius: 20px; padding: 25px; text-align: center; }
+        .batch-bar { display: none; padding: 12px; background: rgba(0,212,255,0.1); border-radius: 10px; margin-bottom: 15px; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+        .batch-bar.show { display: flex; }
         @media (max-width: 768px) {
-            .container {
-                padding: 10px;
-            }
-
-            .app-header h1 {
-                font-size: 1.4em;
-            }
-
-            .app-header .subtitle {
-                font-size: 0.8em;
-            }
-
-            .app-info {
-                gap: 10px;
-                font-size: 0.65em;
-            }
-
-            .main-tab {
-                padding: 10px 12px;
-                font-size: 12px;
-            }
-
-            .main-tab span {
-                display: none;
-            }
-
-            .main-tab i {
-                font-size: 16px;
-            }
-
-            .panel-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .action-buttons {
-                width: 100%;
-                justify-content: flex-start;
-            }
-
-            .btn {
-                padding: 8px 14px;
-                font-size: 12px;
-            }
-
-            .btn span {
-                display: none;
-            }
-
-            .form-grid {
-                grid-template-columns: 1fr;
-                gap: 12px;
-            }
-
-            .client-table {
-                font-size: 12px;
-            }
-
-            .client-table th,
-            .client-table td {
-                padding: 8px 10px;
-            }
-
-            .table-actions {
-                flex-direction: column;
-            }
-
-            .page-nav-btn {
-                width: 36px;
-                height: 36px;
-                font-size: 12px;
-            }
-
-            .modal {
-                padding: 20px;
-            }
-
-            .questionnaire-container {
-                padding: 15px;
-            }
-
-            .toast {
-                top: 10px;
-                right: 10px;
-                left: 10px;
-                justify-content: center;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .client-table-container {
-                overflow-x: scroll;
-                -webkit-overflow-scrolling: touch;
-            }
-
-            .client-table {
-                min-width: 600px;
-            }
-        }
-
-        .empty-hint {
-            text-align: center;
-            padding: 60px 20px;
-            color: var(--text-secondary);
-        }
-
-        .empty-hint i {
-            font-size: 4em;
-            margin-bottom: 15px;
-            opacity: 0.3;
-        }
-
-        .empty-hint p {
-            font-size: 1.1em;
-            margin-bottom: 20px;
-        }
-
-        .qr-section {
-            background: var(--bg-glass);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 20px;
-            padding: 25px;
-            text-align: center;
-        }
-
-        .qr-display {
-            display: inline-block;
-            padding: 20px;
-            background: white;
-            border-radius: 15px;
-            margin: 20px 0;
-        }
-
-        .qr-section h3 {
-            color: var(--text-primary);
-            margin-bottom: 10px;
-        }
-
-        .qr-section p {
-            color: var(--text-secondary);
-            font-size: 14px;
+            .container { padding: 10px; }
+            .app-header h1 { font-size: 1.4em; }
+            .main-tab span { display: none; }
+            .panel-header { flex-direction: column; align-items: flex-start; }
+            .btn span { display: none; }
+            .form-grid { grid-template-columns: 1fr; }
+            .client-table { font-size: 12px; }
+            .client-table-container { overflow-x: scroll; }
         }
     </style>
 </head>
@@ -974,134 +105,68 @@
     <div class="container">
         <div class="app-header">
             <h1><i class="fas fa-sparkles"></i> 九页问卷客户管理系统</h1>
-            <p class="subtitle">专业的客户信息收集与智能管理平台 · 2027科技版</p>
+            <p class="subtitle">专业客户信息收集与智能管理平台</p>
             <div class="app-info">
-                <span><i class="fas fa-code"></i> v2.0.2027</span>
-                <span><i class="far fa-calendar"></i> 更新：2027-07-13</span>
-                <span><i class="fas fa-user-tie"></i> 作者：军哥懂保</span>
+                <span><i class="fas fa-code"></i> v2.1</span>
+                <span><i class="far fa-calendar"></i> 2027-07-13</span>
+                <span><i class="fas fa-user-tie"></i> 军哥懂保</span>
                 <span><i class="fab fa-weixin"></i> xunijiayuan</span>
             </div>
         </div>
 
         <div class="main-tabs">
-            <button class="main-tab active" data-tab="clients">
-                <i class="fas fa-users"></i><span>客户管理</span>
-            </button>
-            <button class="main-tab" data-tab="questionnaire">
-                <i class="fas fa-clipboard-list"></i><span>问卷填写</span>
-            </button>
-            <button class="main-tab" data-tab="share">
-                <i class="fas fa-share-alt"></i><span>分享二维码</span>
-            </button>
+            <button class="main-tab active" data-tab="clients"><i class="fas fa-users"></i><span>客户管理</span></button>
+            <button class="main-tab" data-tab="questionnaire"><i class="fas fa-clipboard-list"></i><span>问卷填写</span></button>
+            <button class="main-tab" data-tab="share"><i class="fas fa-share-alt"></i><span>分享二维码</span></button>
         </div>
 
         <div class="tab-content active" id="tab-clients">
             <div class="client-panel">
                 <div class="panel-header">
-                    <div class="panel-title">
-                        <i class="fas fa-user-friends"></i> 客户列表
-                    </div>
-                    <div class="action-buttons">
-                        <button class="btn btn-primary" onclick="app.newClient()">
-                            <i class="fas fa-plus"></i><span>新建客户</span>
-                        </button>
-                        <button class="btn btn-success" onclick="app.exportExcel()">
-                            <i class="fas fa-file-excel"></i><span>导出Excel</span>
-                        </button>
-                        <button class="btn btn-warning" onclick="app.importExcel()">
-                            <i class="fas fa-file-import"></i><span>导入Excel</span>
-                        </button>
-                        <input type="file" id="importFile" class="hidden-input" accept=".xlsx,.xls" onchange="app.handleImport(event)">
+                    <div class="panel-title"><i class="fas fa-user-friends"></i> 客户列表</div>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                        <button class="btn btn-primary" onclick="app.newClient()"><i class="fas fa-plus"></i><span>新建客户</span></button>
+                        <button class="btn btn-success" onclick="app.exportExcel()"><i class="fas fa-file-excel"></i><span>导出Excel</span></button>
+                        <button class="btn btn-warning" onclick="app.importExcel()"><i class="fas fa-file-import"></i><span>导入Excel</span></button>
+                        <input type="file" id="importFile" style="display:none" accept=".xlsx,.xls" onchange="app.handleImport(event)">
                     </div>
                 </div>
 
                 <div class="stat-cards">
-                    <div class="stat-card">
-                        <div class="stat-icon"><i class="fas fa-users" style="color: var(--primary);"></i></div>
-                        <div class="stat-value" id="totalClients">0</div>
-                        <div class="stat-label">总客户数</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon"><i class="fas fa-check-circle" style="color: var(--success);"></i></div>
-                        <div class="stat-value" id="completedClients">0</div>
-                        <div class="stat-label">已完成</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon"><i class="fas fa-clock" style="color: var(--warning);"></i></div>
-                        <div class="stat-value" id="pendingClients">0</div>
-                        <div class="stat-label">进行中</div>
-                    </div>
+                    <div class="stat-card"><div class="stat-value" id="totalClients">0</div><div class="stat-label">总客户数</div></div>
+                    <div class="stat-card"><div class="stat-value" id="completedClients">0</div><div class="stat-label">已完成</div></div>
+                    <div class="stat-card"><div class="stat-value" id="pendingClients">0</div><div class="stat-label">进行中</div></div>
                 </div>
 
                 <div class="filter-bar">
-                    <div class="search-box">
-                        <i class="fas fa-search"></i>
-                        <input type="text" id="searchInput" placeholder="搜索姓名、电话、行业..." oninput="app.filterClients()">
-                    </div>
-                    <select class="filter-select" id="filterGender" onchange="app.filterClients()">
-                        <option value="">全部性别</option>
-                        <option value="男">男</option>
-                        <option value="女">女</option>
-                    </select>
-                    <select class="filter-select" id="filterStatus" onchange="app.filterClients()">
-                        <option value="">全部状态</option>
-                        <option value="completed">已完成</option>
-                        <option value="pending">进行中</option>
-                    </select>
-                </div>
-
-                <div class="batch-bar" id="batchBar">
-                    <div class="batch-info">
-                        已选择 <strong id="selectedCount">0</strong> 位客户
-                    </div>
-                    <div class="action-buttons">
-                        <button class="btn btn-success btn-sm" onclick="app.exportSelected()">
-                            <i class="fas fa-file-export"></i> 导出选中
-                        </button>
-                        <button class="btn btn-danger btn-sm" onclick="app.deleteSelected()">
-                            <i class="fas fa-trash"></i> 删除选中
-                        </button>
-                    </div>
+                    <div class="search-box"><i class="fas fa-search"></i><input type="text" id="searchInput" placeholder="搜索姓名、电话..." oninput="app.filterClients()"></div>
+                    <select class="filter-select" id="filterGender" onchange="app.filterClients()"><option value="">全部性别</option><option value="男">男</option><option value="女">女</option></select>
+                    <select class="filter-select" id="filterStatus" onchange="app.filterClients()"><option value="">全部状态</option><option value="completed">已完成</option><option value="pending">进行中</option></select>
                 </div>
 
                 <div class="client-table-container">
                     <table class="client-table" id="clientTable">
                         <thead>
                             <tr>
-                                <th class="checkbox-cell">
-                                    <input type="checkbox" id="selectAll" onchange="app.toggleSelectAll(this)">
-                                </th>
-                                <th onclick="app.sortTable('name')">
-                                    姓名 <span class="sort-icon">↕</span>
-                                </th>
-                                <th onclick="app.sortTable('phone')">
-                                    电话 <span class="sort-icon">↕</span>
-                                </th>
-                                <th onclick="app.sortTable('gender')">
-                                    性别 <span class="sort-icon">↕</span>
-                                </th>
-                                <th onclick="app.sortTable('age')">
-                                    年龄 <span class="sort-icon">↕</span>
-                                </th>
+                                <th><input type="checkbox" id="selectAll" onchange="app.toggleSelectAll(this)"></th>
+                                <th onclick="app.sortTable('name')">姓名 ↕</th>
+                                <th onclick="app.sortTable('phone')">电话 ↕</th>
+                                <th onclick="app.sortTable('gender')">性别 ↕</th>
+                                <th>年龄</th>
                                 <th>行业</th>
-                                <th onclick="app.sortTable('updatedAt')">
-                                    更新时间 <span class="sort-icon">↕</span>
-                                </th>
+                                <th onclick="app.sortTable('updatedAt')">更新时间 ↕</th>
                                 <th>完成度</th>
                                 <th>操作</th>
                             </tr>
                         </thead>
-                        <tbody id="clientTableBody">
-                        </tbody>
+                        <tbody id="clientTableBody"></tbody>
                     </table>
                 </div>
 
-                <div class="empty-hint" id="emptyHint" style="display: none;">
-                    <i class="fas fa-inbox"></i>
+                <div class="no-data" id="emptyHint" style="display:none;">
+                    <i class="fas fa-inbox" style="font-size:3em;margin-bottom:15px;opacity:0.5;"></i>
                     <p>暂无客户数据</p>
-                    <button class="btn btn-primary" onclick="app.newClient()">
-                        <i class="fas fa-plus"></i> 添加第一位客户
-                    </button>
+                    <button class="btn btn-primary" onclick="app.newClient()">添加第一位客户</button>
                 </div>
             </div>
         </div>
@@ -1109,425 +174,141 @@
         <div class="tab-content" id="tab-questionnaire">
             <div class="questionnaire-container">
                 <div class="current-client-info">
-                    <div class="client-name">
-                        <i class="fas fa-user-circle"></i>
-                        <span id="currentClientName">请先选择或新建客户</span>
-                    </div>
-                    <button class="btn btn-outline btn-sm" onclick="app.switchToClients()">
-                        <i class="fas fa-list"></i> 客户列表
-                    </button>
+                    <div class="client-name"><i class="fas fa-user-circle"></i><span id="currentClientName">请先选择或新建客户</span></div>
+                    <button class="btn btn-outline btn-sm" onclick="app.switchToClients()"><i class="fas fa-list"></i> 客户列表</button>
                 </div>
 
                 <div class="progress-section">
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="overallProgress"></div>
-                    </div>
-                    <div class="progress-text">
-                        完成度: <span id="completionRate">0%</span> | 当前第 <span id="currentPageNum">1</span> / 9 页
-                    </div>
+                    <div class="progress-bar"><div class="progress-fill" id="overallProgress"></div></div>
+                    <div class="progress-text">完成度: <span id="completionRate">0%</span> | 第 <span id="currentPageNum">1</span> / 9 页</div>
                 </div>
 
-                <div class="page-nav" id="pageNav">
-                </div>
+                <div class="page-nav" id="pageNav"></div>
 
                 <form id="questionnaireForm">
-                    <div class="page active" id="page1">
-                        <h2 class="page-title"><i class="fas fa-user"></i> 第一页：基础信息</h2>
+                    <div class="page active" id="page1"><h2 class="page-title"><i class="fas fa-user"></i> 第一页：基础信息</h2>
                         <div class="form-grid">
-                            <div class="form-group">
-                                <label>姓名 <span class="required">*</span></label>
-                                <input type="text" name="name" placeholder="请输入姓名">
-                            </div>
-                            <div class="form-group">
-                                <label>性别</label>
-                                <select name="gender">
-                                    <option value="">请选择</option>
-                                    <option value="男">男</option>
-                                    <option value="女">女</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>年龄</label>
-                                <input type="number" name="age" min="1" max="120" placeholder="请输入年龄">
-                            </div>
-                            <div class="form-group">
-                                <label>生日</label>
-                                <input type="date" name="birthday">
-                            </div>
-                            <div class="form-group">
-                                <label>身份证号</label>
-                                <input type="text" name="idCard" placeholder="请输入身份证号">
-                            </div>
-                            <div class="form-group">
-                                <label>联系电话 <span class="required">*</span></label>
-                                <input type="tel" name="phone" placeholder="请输入手机号">
-                            </div>
-                            <div class="form-group">
-                                <label>微信号</label>
-                                <input type="text" name="wechat" placeholder="请输入微信号">
-                            </div>
-                            <div class="form-group">
-                                <label>所属行业</label>
-                                <input type="text" name="industry" placeholder="请输入行业">
-                            </div>
-                            <div class="form-group">
-                                <label>任职公司</label>
-                                <input type="text" name="company" placeholder="请输入公司名称">
-                            </div>
-                            <div class="form-group">
-                                <label>职位</label>
-                                <input type="text" name="position" placeholder="请输入职位">
-                            </div>
-                        </div>
-                        <div class="form-grid">
-                            <div class="form-group full-width">
-                                <label>常驻地址</label>
-                                <textarea name="address" placeholder="请输入常驻地址" rows="2"></textarea>
-                            </div>
-                            <div class="form-group full-width">
-                                <label>户籍地址</label>
-                                <textarea name="registeredAddress" placeholder="请输入户籍地址" rows="2"></textarea>
-                            </div>
+                            <div class="form-group"><label>姓名 *</label><input type="text" name="name" placeholder="请输入姓名"></div>
+                            <div class="form-group"><label>性别</label><select name="gender"><option value="">请选择</option><option value="男">男</option><option value="女">女</option></select></div>
+                            <div class="form-group"><label>年龄</label><input type="number" name="age" min="1" max="120" placeholder="请输入年龄"></div>
+                            <div class="form-group"><label>生日</label><input type="date" name="birthday"></div>
+                            <div class="form-group"><label>身份证号</label><input type="text" name="idCard" placeholder="请输入身份证号"></div>
+                            <div class="form-group"><label>联系电话 *</label><input type="tel" name="phone" placeholder="请输入手机号"></div>
+                            <div class="form-group"><label>微信号</label><input type="text" name="wechat" placeholder="请输入微信号"></div>
+                            <div class="form-group"><label>所属行业</label><input type="text" name="industry" placeholder="请输入行业"></div>
+                            <div class="form-group"><label>任职公司</label><input type="text" name="company" placeholder="请输入公司名称"></div>
+                            <div class="form-group"><label>职位</label><input type="text" name="position" placeholder="请输入职位"></div>
+                            <div class="form-group full-width"><label>常驻地址</label><textarea name="address" placeholder="请输入常驻地址"></textarea></div>
+                            <div class="form-group full-width"><label>户籍地址</label><textarea name="registeredAddress" placeholder="请输入户籍地址"></textarea></div>
                         </div>
                     </div>
 
-                    <div class="page" id="page2">
-                        <h2 class="page-title"><i class="fas fa-shield-alt"></i> 第二页：保单情况</h2>
+                    <div class="page" id="page2"><h2 class="page-title"><i class="fas fa-shield-alt"></i> 第二页：保单情况</h2>
                         <div class="form-grid">
-                            <div class="form-group">
-                                <label>保险公司</label>
-                                <input type="text" name="insuranceCompany" placeholder="请输入保险公司">
-                            </div>
-                            <div class="form-group">
-                                <label>保险险种</label>
-                                <input type="text" name="insuranceType" placeholder="请输入险种">
-                            </div>
-                            <div class="form-group">
-                                <label>缴费金额</label>
-                                <input type="number" name="premiumAmount" step="0.01" placeholder="金额">
-                            </div>
-                            <div class="form-group">
-                                <label>保险期限</label>
-                                <input type="text" name="insurancePeriod" placeholder="如：20年/终身">
-                            </div>
-                            <div class="form-group">
-                                <label>到期时间</label>
-                                <input type="date" name="expiryDate">
-                            </div>
-                            <div class="form-group">
-                                <label>生存金</label>
-                                <input type="text" name="survivalBenefit" placeholder="请输入生存金">
-                            </div>
-                        </div>
-                        <div class="form-grid">
-                            <div class="form-group full-width">
-                                <label>保险内容</label>
-                                <textarea name="insuranceContent" placeholder="请详细描述保险内容" rows="3"></textarea>
-                            </div>
-                            <div class="form-group full-width">
-                                <label>额外权益</label>
-                                <textarea name="additionalBenefits" placeholder="请描述额外权益" rows="2"></textarea>
-                            </div>
-                            <div class="form-group full-width">
-                                <label>其他保险</label>
-                                <textarea name="otherInsurance" placeholder="请描述其他保险情况" rows="2"></textarea>
-                            </div>
+                            <div class="form-group"><label>保险公司</label><input type="text" name="insuranceCompany" placeholder="请输入保险公司"></div>
+                            <div class="form-group"><label>保险险种</label><input type="text" name="insuranceType" placeholder="请输入险种"></div>
+                            <div class="form-group"><label>缴费金额</label><input type="number" name="premiumAmount" step="0.01" placeholder="金额"></div>
+                            <div class="form-group"><label>保险期限</label><input type="text" name="insurancePeriod" placeholder="如：20年/终身"></div>
+                            <div class="form-group"><label>到期时间</label><input type="date" name="expiryDate"></div>
+                            <div class="form-group"><label>生存金</label><input type="text" name="survivalBenefit" placeholder="请输入生存金"></div>
+                            <div class="form-group full-width"><label>保险内容</label><textarea name="insuranceContent" placeholder="请详细描述保险内容"></textarea></div>
+                            <div class="form-group full-width"><label>额外权益</label><textarea name="additionalBenefits" placeholder="请描述额外权益"></textarea></div>
+                            <div class="form-group full-width"><label>其他保险</label><textarea name="otherInsurance" placeholder="请描述其他保险情况"></textarea></div>
                         </div>
                     </div>
 
-                    <div class="page" id="page3">
-                        <h2 class="page-title"><i class="fas fa-coins"></i> 第三页：财产情况</h2>
+                    <div class="page" id="page3"><h2 class="page-title"><i class="fas fa-coins"></i> 第三页：财产情况</h2>
                         <div class="form-grid">
-                            <div class="form-group">
-                                <label>定期存款</label>
-                                <input type="number" name="deposits" step="0.01" placeholder="金额">
-                            </div>
-                            <div class="form-group">
-                                <label>国债</label>
-                                <input type="number" name="bonds" step="0.01" placeholder="金额">
-                            </div>
-                            <div class="form-group">
-                                <label>基金</label>
-                                <input type="number" name="funds" step="0.01" placeholder="金额">
-                            </div>
-                            <div class="form-group">
-                                <label>股票</label>
-                                <input type="number" name="stocks" step="0.01" placeholder="金额">
-                            </div>
-                            <div class="form-group">
-                                <label>期权</label>
-                                <input type="number" name="options" step="0.01" placeholder="金额">
-                            </div>
-                            <div class="form-group">
-                                <label>股份</label>
-                                <input type="number" name="shares" step="0.01" placeholder="金额">
-                            </div>
-                        </div>
-                        <div class="form-grid">
-                            <div class="form-group full-width">
-                                <label>车辆信息</label>
-                                <textarea name="carInfo" placeholder="请描述车辆信息" rows="2"></textarea>
-                            </div>
-                            <div class="form-group full-width">
-                                <label>房产信息</label>
-                                <textarea name="propertyInfo" placeholder="请描述房产信息" rows="2"></textarea>
-                            </div>
-                            <div class="form-group full-width">
-                                <label>其他固定资产</label>
-                                <textarea name="otherAssets" placeholder="请描述其他固定资产" rows="2"></textarea>
-                            </div>
+                            <div class="form-group"><label>定期存款</label><input type="number" name="deposits" step="0.01" placeholder="金额"></div>
+                            <div class="form-group"><label>国债</label><input type="number" name="bonds" step="0.01" placeholder="金额"></div>
+                            <div class="form-group"><label>基金</label><input type="number" name="funds" step="0.01" placeholder="金额"></div>
+                            <div class="form-group"><label>股票</label><input type="number" name="stocks" step="0.01" placeholder="金额"></div>
+                            <div class="form-group"><label>期权</label><input type="number" name="options" step="0.01" placeholder="金额"></div>
+                            <div class="form-group"><label>股份</label><input type="number" name="shares" step="0.01" placeholder="金额"></div>
+                            <div class="form-group full-width"><label>车辆信息</label><textarea name="carInfo" placeholder="请描述车辆信息"></textarea></div>
+                            <div class="form-group full-width"><label>房产信息</label><textarea name="propertyInfo" placeholder="请描述房产信息"></textarea></div>
+                            <div class="form-group full-width"><label>其他固定资产</label><textarea name="otherAssets" placeholder="请描述其他固定资产"></textarea></div>
                         </div>
                     </div>
 
-                    <div class="page" id="page4">
-                        <h2 class="page-title"><i class="fas fa-credit-card"></i> 第四页：负债情况</h2>
+                    <div class="page" id="page4"><h2 class="page-title"><i class="fas fa-credit-card"></i> 第四页：负债情况</h2>
                         <div class="form-grid">
-                            <div class="form-group">
-                                <label>信用卡</label>
-                                <input type="text" name="creditCards" placeholder="总额度/已用额度">
-                            </div>
-                            <div class="form-group">
-                                <label>银行贷款</label>
-                                <input type="number" name="bankLoans" step="0.01" placeholder="金额">
-                            </div>
-                            <div class="form-group">
-                                <label>花呗</label>
-                                <input type="number" name="huabei" step="0.01" placeholder="金额">
-                            </div>
-                            <div class="form-group">
-                                <label>借呗</label>
-                                <input type="number" name="jiebei" step="0.01" placeholder="金额">
-                            </div>
-                            <div class="form-group">
-                                <label>月付</label>
-                                <input type="number" name="monthlyPayment" step="0.01" placeholder="金额">
-                            </div>
-                            <div class="form-group">
-                                <label>网贷</label>
-                                <input type="number" name="onlineLoans" step="0.01" placeholder="金额">
-                            </div>
-                        </div>
-                        <div class="form-grid">
-                            <div class="form-group full-width">
-                                <label>第三方贷款</label>
-                                <textarea name="thirdPartyLoans" placeholder="请描述第三方贷款情况" rows="2"></textarea>
-                            </div>
-                            <div class="form-group full-width">
-                                <label>借条</label>
-                                <textarea name="iou" placeholder="请描述借条情况" rows="2"></textarea>
-                            </div>
-                            <div class="form-group full-width">
-                                <label>借支周转</label>
-                                <textarea name="borrowing" placeholder="请描述借支周转情况" rows="2"></textarea>
-                            </div>
+                            <div class="form-group"><label>信用卡</label><input type="text" name="creditCards" placeholder="总额度/已用额度"></div>
+                            <div class="form-group"><label>银行贷款</label><input type="number" name="bankLoans" step="0.01" placeholder="金额"></div>
+                            <div class="form-group"><label>花呗</label><input type="number" name="huabei" step="0.01" placeholder="金额"></div>
+                            <div class="form-group"><label>借呗</label><input type="number" name="jiebei" step="0.01" placeholder="金额"></div>
+                            <div class="form-group"><label>月付</label><input type="number" name="monthlyPayment" step="0.01" placeholder="金额"></div>
+                            <div class="form-group"><label>网贷</label><input type="number" name="onlineLoans" step="0.01" placeholder="金额"></div>
+                            <div class="form-group full-width"><label>第三方贷款</label><textarea name="thirdPartyLoans" placeholder="请描述第三方贷款情况"></textarea></div>
+                            <div class="form-group full-width"><label>借条</label><textarea name="iou" placeholder="请描述借条情况"></textarea></div>
+                            <div class="form-group full-width"><label>借支周转</label><textarea name="borrowing" placeholder="请描述借支周转情况"></textarea></div>
                         </div>
                     </div>
 
-                    <div class="page" id="page5">
-                        <h2 class="page-title"><i class="fas fa-home"></i> 第五页：家庭结构</h2>
+                    <div class="page" id="page5"><h2 class="page-title"><i class="fas fa-home"></i> 第五页：家庭结构</h2>
                         <div class="form-grid">
-                            <div class="form-group">
-                                <label>婚姻状况</label>
-                                <select name="maritalStatus">
-                                    <option value="">请选择</option>
-                                    <option value="未婚">未婚</option>
-                                    <option value="已婚">已婚</option>
-                                    <option value="离异">离异</option>
-                                    <option value="丧偶">丧偶</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>结婚时间</label>
-                                <input type="date" name="marriageDate">
-                            </div>
-                            <div class="form-group">
-                                <label>家庭收入</label>
-                                <input type="number" name="familyIncome" step="0.01" placeholder="年收入">
-                            </div>
-                            <div class="form-group">
-                                <label>家庭支出</label>
-                                <input type="number" name="familyExpenses" step="0.01" placeholder="年支出">
-                            </div>
-                        </div>
-                        <div class="form-grid">
-                            <div class="form-group full-width">
-                                <label>配偶信息</label>
-                                <textarea name="spouseInfo" placeholder="请描述配偶信息（姓名、年龄、职业、收入等）" rows="2"></textarea>
-                            </div>
-                            <div class="form-group full-width">
-                                <label>子女信息</label>
-                                <textarea name="childrenInfo" placeholder="请描述子女信息（数量、年龄、就学等）" rows="2"></textarea>
-                            </div>
-                            <div class="form-group full-width">
-                                <label>父母情况</label>
-                                <textarea name="parents" placeholder="请描述父母情况（年龄、健康、经济等）" rows="2"></textarea>
-                            </div>
-                            <div class="form-group full-width">
-                                <label>兄弟姊妹</label>
-                                <textarea name="siblings" placeholder="请描述兄弟姊妹情况" rows="2"></textarea>
-                            </div>
+                            <div class="form-group"><label>婚姻状况</label><select name="maritalStatus"><option value="">请选择</option><option value="未婚">未婚</option><option value="已婚">已婚</option><option value="离异">离异</option><option value="丧偶">丧偶</option></select></div>
+                            <div class="form-group"><label>结婚时间</label><input type="date" name="marriageDate"></div>
+                            <div class="form-group"><label>家庭收入</label><input type="number" name="familyIncome" step="0.01" placeholder="年收入"></div>
+                            <div class="form-group"><label>家庭支出</label><input type="number" name="familyExpenses" step="0.01" placeholder="年支出"></div>
+                            <div class="form-group full-width"><label>配偶信息</label><textarea name="spouseInfo" placeholder="请描述配偶信息"></textarea></div>
+                            <div class="form-group full-width"><label>子女信息</label><textarea name="childrenInfo" placeholder="请描述子女信息"></textarea></div>
+                            <div class="form-group full-width"><label>父母情况</label><textarea name="parents" placeholder="请描述父母情况"></textarea></div>
+                            <div class="form-group full-width"><label>兄弟姊妹</label><textarea name="siblings" placeholder="请描述兄弟姊妹情况"></textarea></div>
                         </div>
                     </div>
 
-                    <div class="page" id="page6">
-                        <h2 class="page-title"><i class="fas fa-users"></i> 第六页：社会情况</h2>
+                    <div class="page" id="page6"><h2 class="page-title"><i class="fas fa-users"></i> 第六页：社会情况</h2>
                         <div class="form-grid">
-                            <div class="form-group">
-                                <label>紧急联系人</label>
-                                <input type="text" name="emergencyContact" placeholder="姓名 + 电话">
-                            </div>
-                            <div class="form-group">
-                                <label>备用联系人</label>
-                                <input type="text" name="backupContact" placeholder="姓名 + 电话">
-                            </div>
-                        </div>
-                        <div class="form-grid">
-                            <div class="form-group full-width">
-                                <label>兴趣爱好</label>
-                                <textarea name="hobbies" placeholder="请描述兴趣爱好" rows="2"></textarea>
-                            </div>
-                            <div class="form-group full-width">
-                                <label>社交圈子</label>
-                                <textarea name="friends" placeholder="请描述社交圈子特点" rows="2"></textarea>
-                            </div>
-                            <div class="form-group full-width">
-                                <label>个人特长</label>
-                                <textarea name="strengths" placeholder="请描述个人特长" rows="2"></textarea>
-                            </div>
-                            <div class="form-group full-width">
-                                <label>骄傲成就</label>
-                                <textarea name="proudMoments" placeholder="请描述人生中的骄傲成就" rows="3"></textarea>
-                            </div>
+                            <div class="form-group"><label>紧急联系人</label><input type="text" name="emergencyContact" placeholder="姓名 + 电话"></div>
+                            <div class="form-group"><label>备用联系人</label><input type="text" name="backupContact" placeholder="姓名 + 电话"></div>
+                            <div class="form-group full-width"><label>兴趣爱好</label><textarea name="hobbies" placeholder="请描述兴趣爱好"></textarea></div>
+                            <div class="form-group full-width"><label>社交圈子</label><textarea name="friends" placeholder="请描述社交圈子特点"></textarea></div>
+                            <div class="form-group full-width"><label>个人特长</label><textarea name="strengths" placeholder="请描述个人特长"></textarea></div>
+                            <div class="form-group full-width"><label>骄傲成就</label><textarea name="proudMoments" placeholder="请描述人生中的骄傲成就"></textarea></div>
                         </div>
                     </div>
 
-                    <div class="page" id="page7">
-                        <h2 class="page-title"><i class="fas fa-star"></i> 第七页：人生定义</h2>
+                    <div class="page" id="page7"><h2 class="page-title"><i class="fas fa-star"></i> 第七页：人生定义</h2>
                         <div class="form-grid">
-                            <div class="form-group full-width">
-                                <label>人生节点</label>
-                                <textarea name="lifeMilestones" placeholder="人生中的重要节点（升学、就业、结婚、生子等）" rows="3"></textarea>
-                            </div>
-                            <div class="form-group full-width">
-                                <label>重大事件</label>
-                                <textarea name="keyEvents" placeholder="影响人生的重大事件" rows="3"></textarea>
-                            </div>
-                            <div class="form-group full-width">
-                                <label>重要认知</label>
-                                <textarea name="importantInsights" placeholder="人生中的重要认知和感悟" rows="3"></textarea>
-                            </div>
-                            <div class="form-group full-width">
-                                <label>重要改变</label>
-                                <textarea name="significantChanges" placeholder="人生中的重要改变和转折" rows="3"></textarea>
-                            </div>
-                            <div class="form-group full-width">
-                                <label>未来规划</label>
-                                <textarea name="futurePlans" placeholder="对未来的规划和期待" rows="3"></textarea>
-                            </div>
+                            <div class="form-group full-width"><label>人生节点</label><textarea name="lifeMilestones" placeholder="人生中的重要节点"></textarea></div>
+                            <div class="form-group full-width"><label>重大事件</label><textarea name="keyEvents" placeholder="影响人生的重大事件"></textarea></div>
+                            <div class="form-group full-width"><label>重要认知</label><textarea name="importantInsights" placeholder="人生中的重要认知和感悟"></textarea></div>
+                            <div class="form-group full-width"><label>重要改变</label><textarea name="significantChanges" placeholder="人生中的重要改变和转折"></textarea></div>
+                            <div class="form-group full-width"><label>未来规划</label><textarea name="futurePlans" placeholder="对未来的规划和期待"></textarea></div>
                         </div>
                     </div>
 
-                    <div class="page" id="page8">
-                        <h2 class="page-title"><i class="fas fa-heart"></i> 第八页：生活困境</h2>
+                    <div class="page" id="page8"><h2 class="page-title"><i class="fas fa-heart"></i> 第八页：生活困境</h2>
                         <div class="form-grid">
-                            <div class="form-group full-width">
-                                <label>工作感受</label>
-                                <textarea name="workFeelings" placeholder="对当前工作的感受和想法" rows="3"></textarea>
-                            </div>
-                            <div class="form-group full-width">
-                                <label>家庭状态</label>
-                                <textarea name="familyStatus" placeholder="当前家庭状态描述" rows="3"></textarea>
-                            </div>
-                            <div class="form-group full-width">
-                                <label>未来希望</label>
-                                <textarea name="futureHopes" placeholder="对未来的希望和期许" rows="3"></textarea>
-                            </div>
-                            <div class="form-group full-width">
-                                <label>重要关系排序</label>
-                                <textarea name="loveRanking" placeholder="人生中重要关系的排序及原因" rows="3"></textarea>
-                            </div>
-                            <div class="form-group full-width">
-                                <label>最大困扰</label>
-                                <textarea name="biggestConcern" placeholder="目前最大的困扰和担忧" rows="3"></textarea>
-                            </div>
+                            <div class="form-group full-width"><label>工作感受</label><textarea name="workFeelings" placeholder="对当前工作的感受和想法"></textarea></div>
+                            <div class="form-group full-width"><label>家庭状态</label><textarea name="familyStatus" placeholder="当前家庭状态描述"></textarea></div>
+                            <div class="form-group full-width"><label>未来希望</label><textarea name="futureHopes" placeholder="对未来的希望和期许"></textarea></div>
+                            <div class="form-group full-width"><label>重要关系排序</label><textarea name="loveRanking" placeholder="人生中重要关系的排序及原因"></textarea></div>
+                            <div class="form-group full-width"><label>最大困扰</label><textarea name="biggestConcern" placeholder="目前最大的困扰和担忧"></textarea></div>
                         </div>
                     </div>
 
-                    <div class="page" id="page9">
-                        <h2 class="page-title"><i class="fas fa-mobile-alt"></i> 第九页：高频工具</h2>
+                    <div class="page" id="page9"><h2 class="page-title"><i class="fas fa-mobile-alt"></i> 第九页：高频工具</h2>
                         <div class="form-grid">
-                            <div class="form-group">
-                                <label>微信使用</label>
-                                <select name="wechatUsage">
-                                    <option value="">请选择</option>
-                                    <option value="频繁">频繁</option>
-                                    <option value="一般">一般</option>
-                                    <option value="较少">较少</option>
-                                    <option value="不使用">不使用</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>金事通</label>
-                                <select name="jinshitong">
-                                    <option value="">请选择</option>
-                                    <option value="经常使用">经常使用</option>
-                                    <option value="偶尔使用">偶尔使用</option>
-                                    <option value="了解但不用">了解但不用</option>
-                                    <option value="不了解">不了解</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>交管12123</label>
-                                <select name="traffic12123">
-                                    <option value="">请选择</option>
-                                    <option value="经常使用">经常使用</option>
-                                    <option value="偶尔使用">偶尔使用</option>
-                                    <option value="了解但不用">了解但不用</option>
-                                    <option value="不了解">不了解</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>数字化程度</label>
-                                <select name="digitalLevel">
-                                    <option value="">请选择</option>
-                                    <option value="高">高</option>
-                                    <option value="中">中</option>
-                                    <option value="低">低</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-grid">
-                            <div class="form-group full-width">
-                                <label>财务工具</label>
-                                <textarea name="financeAssistant" placeholder="使用的财务工具/APP" rows="2"></textarea>
-                            </div>
-                            <div class="form-group full-width">
-                                <label>AI工具</label>
-                                <textarea name="aiTools" placeholder="使用的AI工具" rows="2"></textarea>
-                            </div>
-                            <div class="form-group full-width">
-                                <label>其他APP</label>
-                                <textarea name="otherApps" placeholder="其他高频使用的APP" rows="2"></textarea>
-                            </div>
+                            <div class="form-group"><label>微信使用</label><select name="wechatUsage"><option value="">请选择</option><option value="频繁">频繁</option><option value="一般">一般</option><option value="较少">较少</option><option value="不使用">不使用</option></select></div>
+                            <div class="form-group"><label>金事通</label><select name="jinshitong"><option value="">请选择</option><option value="经常使用">经常使用</option><option value="偶尔使用">偶尔使用</option><option value="了解但不用">了解但不用</option><option value="不了解">不了解</option></select></div>
+                            <div class="form-group"><label>交管12123</label><select name="traffic12123"><option value="">请选择</option><option value="经常使用">经常使用</option><option value="偶尔使用">偶尔使用</option><option value="了解但不用">了解但不用</option><option value="不了解">不了解</option></select></div>
+                            <div class="form-group"><label>数字化程度</label><select name="digitalLevel"><option value="">请选择</option><option value="高">高</option><option value="中">中</option><option value="低">低</option></select></div>
+                            <div class="form-group full-width"><label>财务工具</label><textarea name="financeAssistant" placeholder="使用的财务工具/APP"></textarea></div>
+                            <div class="form-group full-width"><label>AI工具</label><textarea name="aiTools" placeholder="使用的AI工具"></textarea></div>
+                            <div class="form-group full-width"><label>其他APP</label><textarea name="otherApps" placeholder="其他高频使用的APP"></textarea></div>
                         </div>
                     </div>
                 </form>
 
                 <div class="form-nav">
-                    <button class="btn btn-outline" id="prevBtn" onclick="app.prevPage()">
-                        <i class="fas fa-chevron-left"></i> 上一页
-                    </button>
-                    <div class="action-buttons">
-                        <button class="btn btn-primary" onclick="app.saveCurrentClient()">
-                            <i class="fas fa-save"></i> 保存
-                        </button>
-                        <button class="btn btn-success" style="display: none;" id="completeBtn" onclick="app.completeQuestionnaire()">
-                            <i class="fas fa-check"></i> 完成
-                        </button>
+                    <button class="btn btn-outline" id="prevBtn" onclick="app.prevPage()"><i class="fas fa-chevron-left"></i> 上一页</button>
+                    <div style="display:flex;gap:10px;">
+                        <button class="btn btn-primary" onclick="app.saveCurrentClient()"><i class="fas fa-save"></i> 保存</button>
+                        <button class="btn btn-success" id="completeBtn" style="display:none;" onclick="app.completeQuestionnaire()"><i class="fas fa-check"></i> 完成</button>
                     </div>
-                    <button class="btn btn-primary" id="nextBtn" onclick="app.nextPage()">
-                        下一页 <i class="fas fa-chevron-right"></i>
-                    </button>
+                    <button class="btn btn-primary" id="nextBtn" onclick="app.nextPage()">下一页 <i class="fas fa-chevron-right"></i></button>
                 </div>
             </div>
         </div>
@@ -1536,89 +317,56 @@
             <div class="qr-section">
                 <h3><i class="fas fa-qrcode"></i> 扫码分享问卷</h3>
                 <p>使用手机扫描下方二维码，即可打开问卷填写页面</p>
-                <div class="qr-display" id="shareQRCode">
-                    <canvas id="qrCanvas"></canvas>
-                </div>
-                <button class="btn btn-primary" onclick="app.generateShareQR()">
-                    <i class="fas fa-sync"></i> 重新生成
-                </button>
+                <div class="qr-display" id="shareQRCode"><div id="qrCanvas"></div></div>
+                <button class="btn btn-primary" onclick="app.generateShareQR()"><i class="fas fa-sync"></i> 重新生成</button>
             </div>
         </div>
     </div>
 
     <div class="modal-overlay" id="confirmModal">
-        <div class="modal">
-            <h3 id="modalTitle">确认操作</h3>
-            <div class="modal-body" id="modalBody">
-                <p>确定要执行此操作吗？</p>
-            </div>
-            <div class="modal-actions">
-                <button class="btn btn-outline" onclick="app.closeModal('confirmModal')">取消</button>
-                <button class="btn btn-danger" id="confirmBtn" onclick="app.confirmAction()">确认</button>
-            </div>
-        </div>
+        <div class="modal"><h3 id="modalTitle">确认操作</h3><div class="modal-body" id="modalBody"><p>确定要执行此操作吗？</p></div><div class="modal-actions"><button class="btn btn-outline" onclick="app.closeModal('confirmModal')">取消</button><button class="btn btn-danger" onclick="app.confirmAction()">确认</button></div></div>
     </div>
 
     <div class="modal-overlay" id="clientQRModal">
-        <div class="modal" style="max-width: 400px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <div class="modal" style="max-width:400px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
                 <h3><i class="fas fa-qrcode"></i> 客户专属二维码</h3>
-                <button class="btn btn-outline btn-sm" onclick="app.closeModal('clientQRModal')" style="padding: 5px 10px;">
-                    <i class="fas fa-times"></i>
-                </button>
+                <button class="btn btn-outline btn-sm" onclick="app.closeModal('clientQRModal')"><i class="fas fa-times"></i></button>
             </div>
-            <div class="modal-body" style="text-align: center;">
-                <div id="clientQRCanvas" style="display: inline-block; padding: 15px; background: white; border-radius: 12px; margin-bottom: 15px;"></div>
-                <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 5px;" id="clientQRName">客户姓名</p>
-                <p style="color: var(--text-secondary); font-size: 12px;">扫码即可填写问卷，数据自动同步</p>
+            <div class="modal-body" style="text-align:center;">
+                <div id="clientQRCanvas" style="display:inline-block;padding:15px;background:white;border-radius:12px;margin-bottom:15px;"></div>
+                <p style="color:#94a3b8;font-size:14px;margin-bottom:5px;" id="clientQRName">客户姓名</p>
+                <p style="color:#94a3b8;font-size:12px;">扫码即可填写问卷，数据自动同步</p>
             </div>
-            <div class="modal-actions">
-                <button class="btn btn-primary" onclick="app.closeModal('clientQRModal')">关闭</button>
-            </div>
+            <div class="modal-actions"><button class="btn btn-primary" onclick="app.closeModal('clientQRModal')">关闭</button></div>
         </div>
     </div>
 
     <script>
-    const STORAGE_KEY = 'nine_page_clients_v2';
+    const STORAGE_KEY = 'nine_page_clients_v3';
     const FIELD_LABELS = {
         name: '姓名', idCard: '身份证号', gender: '性别', age: '年龄', birthday: '生日',
         phone: '联系电话', wechat: '微信号', industry: '所属行业', company: '任职公司',
         position: '职位', address: '常驻地址', registeredAddress: '户籍地址',
-        insuranceCompany: '保险公司', insuranceType: '保险险种',
-        premiumAmount: '缴费金额', insurancePeriod: '保险期限', expiryDate: '到期时间',
-        survivalBenefit: '生存金', insuranceContent: '保险内容',
-        additionalBenefits: '额外权益', otherInsurance: '其他保险',
+        insuranceCompany: '保险公司', insuranceType: '保险险种', premiumAmount: '缴费金额',
+        insurancePeriod: '保险期限', expiryDate: '到期时间', survivalBenefit: '生存金',
+        insuranceContent: '保险内容', additionalBenefits: '额外权益', otherInsurance: '其他保险',
         deposits: '定期存款', bonds: '国债', funds: '基金', stocks: '股票',
         options: '期权', shares: '股份', carInfo: '车辆信息', propertyInfo: '房产信息',
-        otherAssets: '其他固定资产',
-        creditCards: '信用卡', bankLoans: '银行贷款', huabei: '花呗', jiebei: '借呗',
-        monthlyPayment: '月付', onlineLoans: '网贷', thirdPartyLoans: '第三方贷款',
-        iou: '借条', borrowing: '借支周转',
+        otherAssets: '其他固定资产', creditCards: '信用卡', bankLoans: '银行贷款',
+        huabei: '花呗', jiebei: '借呗', monthlyPayment: '月付', onlineLoans: '网贷',
+        thirdPartyLoans: '第三方贷款', iou: '借条', borrowing: '借支周转',
         maritalStatus: '婚姻状况', marriageDate: '结婚时间', spouseInfo: '配偶信息',
         childrenInfo: '子女信息', parents: '父母情况', siblings: '兄弟姊妹',
         familyIncome: '家庭收入', familyExpenses: '家庭支出',
         emergencyContact: '紧急联系人', backupContact: '备用联系人',
         hobbies: '兴趣爱好', friends: '社交圈子', strengths: '个人特长',
-        proudMoments: '骄傲成就',
-        lifeMilestones: '人生节点', keyEvents: '重大事件', importantInsights: '重要认知',
-        significantChanges: '重要改变', futurePlans: '未来规划',
+        proudMoments: '骄傲成就', lifeMilestones: '人生节点', keyEvents: '重大事件',
+        importantInsights: '重要认知', significantChanges: '重要改变', futurePlans: '未来规划',
         workFeelings: '工作感受', familyStatus: '家庭状态', futureHopes: '未来希望',
         loveRanking: '重要关系排序', biggestConcern: '最大困扰',
         wechatUsage: '微信使用', jinshitong: '金事通', traffic12123: '交管12123',
-        digitalLevel: '数字化程度', financeAssistant: '财务工具', aiTools: 'AI工具',
-        otherApps: '其他APP'
-    };
-
-    const PAGE_FIELDS = {
-        1: ['name', 'idCard', 'gender', 'age', 'birthday', 'phone', 'wechat', 'industry', 'company', 'position', 'address', 'registeredAddress'],
-        2: ['insuranceCompany', 'insuranceType', 'premiumAmount', 'insurancePeriod', 'expiryDate', 'survivalBenefit', 'insuranceContent', 'additionalBenefits', 'otherInsurance'],
-        3: ['deposits', 'bonds', 'funds', 'stocks', 'options', 'shares', 'carInfo', 'propertyInfo', 'otherAssets'],
-        4: ['creditCards', 'bankLoans', 'huabei', 'jiebei', 'monthlyPayment', 'onlineLoans', 'thirdPartyLoans', 'iou', 'borrowing'],
-        5: ['maritalStatus', 'marriageDate', 'familyIncome', 'familyExpenses', 'spouseInfo', 'childrenInfo', 'parents', 'siblings'],
-        6: ['emergencyContact', 'backupContact', 'hobbies', 'friends', 'strengths', 'proudMoments'],
-        7: ['lifeMilestones', 'keyEvents', 'importantInsights', 'significantChanges', 'futurePlans'],
-        8: ['workFeelings', 'familyStatus', 'futureHopes', 'loveRanking', 'biggestConcern'],
-        9: ['wechatUsage', 'jinshitong', 'traffic12123', 'digitalLevel', 'financeAssistant', 'aiTools', 'otherApps']
+        digitalLevel: '数字化程度', financeAssistant: '财务工具', aiTools: 'AI工具', otherApps: '其他APP'
     };
 
     class QuestionnaireApp {
@@ -1638,8 +386,7 @@
         init() {
             this.loadClients();
             this.initPageNav();
-            this.bindFormEvents();
-            this.bindTabEvents();
+            this.bindEvents();
             this.renderClientTable();
             this.updateStats();
             this.generateShareQR();
@@ -1649,11 +396,8 @@
         loadClients() {
             try {
                 const data = localStorage.getItem(STORAGE_KEY);
-                if (data) {
-                    this.clients = JSON.parse(data);
-                }
+                this.clients = data ? JSON.parse(data) : [];
             } catch (e) {
-                console.error('加载客户数据失败:', e);
                 this.clients = [];
             }
         }
@@ -1664,53 +408,30 @@
 
         initPageNav() {
             const nav = document.getElementById('pageNav');
-            const pageNames = ['基础信息', '保单情况', '财产情况', '负债情况', '家庭结构', '社会情况', '人生定义', '生活困境', '高频工具'];
-            nav.innerHTML = pageNames.map((name, i) => 
-                `<button class="page-nav-btn ${i === 0 ? 'active' : ''}" data-page="${i+1}" onclick="app.goToPage(${i+1})" title="${name}">${i+1}</button>`
+            const names = ['基础信息', '保单情况', '财产情况', '负债情况', '家庭结构', '社会情况', '人生定义', '生活困境', '高频工具'];
+            nav.innerHTML = names.map((n, i) => 
+                `<button class="page-nav-btn ${i === 0 ? 'active' : ''}" data-page="${i+1}" onclick="app.goToPage(${i+1})" title="${n}">${i+1}</button>`
             ).join('');
         }
 
-        bindFormEvents() {
-            const form = document.getElementById('questionnaireForm');
-            const inputs = form.querySelectorAll('input, select, textarea');
+        bindEvents() {
+            document.querySelectorAll('.main-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    document.querySelectorAll('.main-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab.dataset.tab));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.toggle('active', c.id === `tab-${tab.dataset.tab}`));
+                });
+            });
+
+            const inputs = document.querySelectorAll('#questionnaireForm input, #questionnaireForm select, #questionnaireForm textarea');
             inputs.forEach(input => {
                 input.addEventListener('input', () => this.onFieldChange());
                 input.addEventListener('change', () => this.onFieldChange());
             });
         }
 
-        bindTabEvents() {
-            document.querySelectorAll('.main-tab').forEach(tab => {
-                tab.addEventListener('click', () => {
-                    const tabName = tab.dataset.tab;
-                    this.switchTab(tabName);
-                });
-            });
-        }
-
-        switchTab(tabName) {
-            document.querySelectorAll('.main-tab').forEach(t => {
-                t.classList.toggle('active', t.dataset.tab === tabName);
-            });
-            document.querySelectorAll('.tab-content').forEach(c => {
-                c.classList.toggle('active', c.id === `tab-${tabName}`);
-            });
-        }
-
-        switchToClients() {
-            this.switchTab('clients');
-        }
-
         newClient() {
             const id = Date.now().toString();
-            const newClient = {
-                id,
-                data: {},
-                status: 'pending',
-                createdAt: new Date().toISOString(),
-                updatedAt: new Date().toISOString()
-            };
-            this.clients.unshift(newClient);
+            this.clients.unshift({ id, data: {}, status: 'pending', createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() });
             this.saveClients();
             this.currentClientId = id;
             this.currentPage = 1;
@@ -1719,7 +440,7 @@
             this.updateCurrentClientInfo();
             this.renderClientTable();
             this.updateStats();
-            this.showToast('info', '已创建新客户，请填写问卷');
+            this.showToast('info', '已创建新客户');
         }
 
         editClient(id) {
@@ -1730,19 +451,26 @@
             this.updateCurrentClientInfo();
         }
 
+        switchTab(tabName) {
+            document.querySelectorAll('.main-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tabName));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.toggle('active', c.id === `tab-${tabName}`));
+        }
+
+        switchToClients() {
+            this.switchTab('clients');
+        }
+
         loadClientToForm() {
             const client = this.getCurrentClient();
-            if (!client) return;
-
             const form = document.getElementById('questionnaireForm');
             form.reset();
 
-            Object.entries(client.data).forEach(([key, value]) => {
-                const input = form.querySelector(`[name="${key}"]`);
-                if (input && value !== undefined && value !== null) {
-                    input.value = value;
-                }
-            });
+            if (client && client.data) {
+                Object.entries(client.data).forEach(([k, v]) => {
+                    const input = form.querySelector(`[name="${k}"]`);
+                    if (input) input.value = v;
+                });
+            }
 
             this.goToPage(1);
             this.updateProgress();
@@ -1756,12 +484,7 @@
 
         updateCurrentClientInfo() {
             const client = this.getCurrentClient();
-            const nameEl = document.getElementById('currentClientName');
-            if (client && client.data.name) {
-                nameEl.textContent = `当前客户：${client.data.name}`;
-            } else {
-                nameEl.textContent = '新客户（未命名）';
-            }
+            document.getElementById('currentClientName').textContent = client && client.data.name ? `当前客户：${client.data.name}` : '新客户（未命名）';
         }
 
         onFieldChange() {
@@ -1778,10 +501,8 @@
             const formData = new FormData(form);
             
             client.data = {};
-            for (let [key, value] of formData.entries()) {
-                if (value.trim()) {
-                    client.data[key] = value.trim();
-                }
+            for (let [k, v] of formData.entries()) {
+                if (v.trim()) client.data[k] = v.trim();
             }
             client.updatedAt = new Date().toISOString();
             return client;
@@ -1802,13 +523,11 @@
             this.saveClients();
             this.renderClientTable();
             this.updateStats();
-            this.updateCurrentClientInfo();
             this.showToast('success', '保存成功！');
         }
 
         completeQuestionnaire() {
             if (!this.currentClientId) return;
-            
             const client = this.collectFormData();
             client.status = 'completed';
             client.completedAt = new Date().toISOString();
@@ -1820,38 +539,22 @@
 
         updateProgress() {
             const client = this.getCurrentClient();
-            const totalFields = Object.keys(FIELD_LABELS).length;
-            const filledFields = client ? Object.keys(client.data).length : 0;
-            const progress = totalFields > 0 ? Math.round((filledFields / totalFields) * 100) : 0;
+            const total = Object.keys(FIELD_LABELS).length;
+            const filled = client ? Object.keys(client.data).length : 0;
+            const progress = total > 0 ? Math.round((filled / total) * 100) : 0;
 
-            const progressBar = document.getElementById('overallProgress');
-            const completionRate = document.getElementById('completionRate');
-            const currentPageNum = document.getElementById('currentPageNum');
-
-            if (progressBar) progressBar.style.width = `${progress}%`;
-            if (completionRate) completionRate.textContent = `${progress}%`;
-            if (currentPageNum) currentPageNum.textContent = this.currentPage;
-
-            const completeBtn = document.getElementById('completeBtn');
-            if (completeBtn) {
-                completeBtn.style.display = progress > 50 ? 'inline-flex' : 'none';
-            }
+            document.getElementById('overallProgress').style.width = `${progress}%`;
+            document.getElementById('completionRate').textContent = `${progress}%`;
+            document.getElementById('currentPageNum').textContent = this.currentPage;
+            document.getElementById('completeBtn').style.display = progress > 50 ? 'inline-flex' : 'none';
         }
 
         updatePageNav() {
             const client = this.getCurrentClient();
-            const btns = document.querySelectorAll('.page-nav-btn');
-            
-            btns.forEach((btn, i) => {
-                const pageNum = i + 1;
-                const fields = PAGE_FIELDS[pageNum] || [];
-                const filledCount = client ? fields.filter(f => client.data[f]).length : 0;
-                const isComplete = filledCount === fields.length && fields.length > 0;
-
+            document.querySelectorAll('.page-nav-btn').forEach((btn, i) => {
                 btn.classList.remove('active', 'completed');
-                if (pageNum === this.currentPage) {
-                    btn.classList.add('active');
-                } else if (isComplete) {
+                if (i + 1 === this.currentPage) btn.classList.add('active');
+                else if (client && client.data && Object.keys(client.data).length > 0) {
                     btn.classList.add('completed');
                 }
             });
@@ -1859,98 +562,50 @@
 
         goToPage(pageNum) {
             if (pageNum < 1 || pageNum > this.totalPages) return;
-
             this.collectFormData();
 
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            const targetPage = document.getElementById(`page${pageNum}`);
-            if (targetPage) targetPage.classList.add('active');
-
+            document.getElementById(`page${pageNum}`).classList.add('active');
             this.currentPage = pageNum;
             this.updatePageNav();
             this.updateProgress();
             this.updateNavButtons();
-
-            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        prevPage() {
-            if (this.currentPage > 1) {
-                this.goToPage(this.currentPage - 1);
-            }
-        }
-
-        nextPage() {
-            if (this.currentPage < this.totalPages) {
-                this.goToPage(this.currentPage + 1);
-            }
-        }
+        prevPage() { if (this.currentPage > 1) this.goToPage(this.currentPage - 1); }
+        nextPage() { if (this.currentPage < this.totalPages) this.goToPage(this.currentPage + 1); }
 
         updateNavButtons() {
-            const prevBtn = document.getElementById('prevBtn');
-            const nextBtn = document.getElementById('nextBtn');
-            
-            if (prevBtn) prevBtn.disabled = this.currentPage === 1;
-            if (nextBtn) {
-                if (this.currentPage === this.totalPages) {
-                    nextBtn.style.display = 'none';
-                } else {
-                    nextBtn.style.display = 'inline-flex';
-                }
-            }
+            document.getElementById('prevBtn').disabled = this.currentPage === 1;
+            document.getElementById('nextBtn').style.display = this.currentPage === this.totalPages ? 'none' : 'inline-flex';
         }
 
-        filterClients() {
-            this.renderClientTable();
-        }
+        filterClients() { this.renderClientTable(); }
 
         sortTable(field) {
-            if (this.sortField === field) {
-                this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
-            } else {
-                this.sortField = field;
-                this.sortOrder = 'asc';
-            }
+            if (this.sortField === field) this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
+            else { this.sortField = field; this.sortOrder = 'asc'; }
             this.renderClientTable();
         }
 
         getFilteredClients() {
             const search = document.getElementById('searchInput').value.toLowerCase();
-            const genderFilter = document.getElementById('filterGender').value;
-            const statusFilter = document.getElementById('filterStatus').value;
+            const gender = document.getElementById('filterGender').value;
+            const status = document.getElementById('filterStatus').value;
 
-            let filtered = this.clients.filter(client => {
-                const data = client.data || {};
-                const matchSearch = !search || 
-                    (data.name && data.name.toLowerCase().includes(search)) ||
-                    (data.phone && data.phone.includes(search)) ||
-                    (data.industry && data.industry.toLowerCase().includes(search));
-                
-                const matchGender = !genderFilter || data.gender === genderFilter;
-                const matchStatus = !statusFilter || client.status === statusFilter;
-
+            return this.clients.filter(c => {
+                const d = c.data || {};
+                const matchSearch = !search || (d.name && d.name.toLowerCase().includes(search)) || (d.phone && d.phone.includes(search)) || (d.industry && d.industry.toLowerCase().includes(search));
+                const matchGender = !gender || d.gender === gender;
+                const matchStatus = !status || c.status === status;
                 return matchSearch && matchGender && matchStatus;
-            });
-
-            filtered.sort((a, b) => {
+            }).sort((a, b) => {
                 let valA, valB;
-                if (this.sortField === 'updatedAt') {
-                    valA = new Date(a.updatedAt).getTime();
-                    valB = new Date(b.updatedAt).getTime();
-                } else if (this.sortField === 'age') {
-                    valA = parseInt(a.data?.age || 0);
-                    valB = parseInt(b.data?.age || 0);
-                } else {
-                    valA = (a.data?.[this.sortField] || '').toString().toLowerCase();
-                    valB = (b.data?.[this.sortField] || '').toString().toLowerCase();
-                }
-                if (this.sortOrder === 'asc') {
-                    return valA > valB ? 1 : -1;
-                }
-                return valA < valB ? 1 : -1;
+                if (this.sortField === 'updatedAt') { valA = new Date(a.updatedAt).getTime(); valB = new Date(b.updatedAt).getTime(); }
+                else if (this.sortField === 'age') { valA = parseInt(a.data?.age || 0); valB = parseInt(b.data?.age || 0); }
+                else { valA = (a.data?.[this.sortField] || '').toString().toLowerCase(); valB = (b.data?.[this.sortField] || '').toString().toLowerCase(); }
+                return this.sortOrder === 'asc' ? (valA > valB ? 1 : -1) : (valA < valB ? 1 : -1);
             });
-
-            return filtered;
         }
 
         renderClientTable() {
@@ -1965,210 +620,101 @@
             }
 
             emptyHint.style.display = 'none';
-            tbody.innerHTML = clients.map(client => {
-                const data = client.data || {};
-                const totalFields = Object.keys(FIELD_LABELS).length;
-                const filledFields = Object.keys(data).length;
-                const progress = Math.round((filledFields / totalFields) * 100);
-                const isSelected = this.selectedIds.has(client.id);
-                const updatedAt = new Date(client.updatedAt).toLocaleString('zh-CN', {
-                    month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit'
-                });
+            tbody.innerHTML = clients.map(c => {
+                const d = c.data || {};
+                const total = Object.keys(FIELD_LABELS).length;
+                const filled = Object.keys(d).length;
+                const progress = Math.round((filled / total) * 100);
+                const updatedAt = new Date(c.updatedAt).toLocaleString('zh-CN', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });
 
-                return `
-                    <tr class="${isSelected ? 'selected' : ''}" data-id="${client.id}">
-                        <td class="checkbox-cell">
-                            <input type="checkbox" ${isSelected ? 'checked' : ''} onchange="app.toggleSelect('${client.id}', this.checked)">
-                        </td>
-                        <td><strong>${data.name || '-'}</strong></td>
-                        <td>${data.phone || '-'}</td>
-                        <td>${data.gender || '-'}</td>
-                        <td>${data.age || '-'}</td>
-                        <td>${data.industry || '-'}</td>
-                        <td>${updatedAt}</td>
-                        <td>
-                            <span style="color: ${progress >= 80 ? 'var(--success)' : progress >= 40 ? 'var(--warning)' : 'var(--danger)'};">
-                                ${progress}%
-                            </span>
-                        </td>
-                        <td>
-                            <div class="table-actions">
-                                <button class="btn btn-primary btn-sm" onclick="app.editClient('${client.id}')">
-                                    <i class="fas fa-edit"></i> 编辑
-                                </button>
-                                <button class="btn btn-success btn-sm" onclick="app.showClientQR('${client.id}')">
-                                    <i class="fas fa-qrcode"></i> 分享
-                                </button>
-                                <button class="btn btn-danger btn-sm" onclick="app.deleteClient('${client.id}')">
-                                    <i class="fas fa-trash"></i> 删除
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                `;
+                return `<tr data-id="${c.id}">
+                    <td><input type="checkbox" onchange="app.toggleSelect('${c.id}', this.checked)"></td>
+                    <td><strong>${d.name || '-'}</strong></td>
+                    <td>${d.phone || '-'}</td>
+                    <td>${d.gender || '-'}</td>
+                    <td>${d.age || '-'}</td>
+                    <td>${d.industry || '-'}</td>
+                    <td>${updatedAt}</td>
+                    <td><span style="color: ${progress >= 80 ? '#10b981' : progress >= 40 ? '#f59e0b' : '#ef4444'};">${progress}%</span></td>
+                    <td><div class="table-actions">
+                        <button class="btn btn-primary btn-sm" onclick="app.editClient('${c.id}')"><i class="fas fa-edit"></i> 编辑</button>
+                        <button class="btn btn-success btn-sm" onclick="app.showClientQR('${c.id}')"><i class="fas fa-qrcode"></i> 分享</button>
+                        <button class="btn btn-danger btn-sm" onclick="app.deleteClient('${c.id}')"><i class="fas fa-trash"></i> 删除</button>
+                    </div></td>
+                </tr>`;
             }).join('');
-
-            this.updateSortIcons();
-            this.updateBatchBar();
-        }
-
-        updateSortIcons() {
-            const headers = document.querySelectorAll('.client-table th');
-            headers.forEach(th => {
-                th.classList.remove('sort-asc', 'sort-desc');
-                const icon = th.querySelector('.sort-icon');
-                if (icon) icon.textContent = '↕';
-            });
-
-            const sortHeader = document.querySelector(`.client-table th[onclick*="sortTable('${this.sortField}'"]`);
-            if (sortHeader) {
-                sortHeader.classList.add(this.sortOrder === 'asc' ? 'sort-asc' : 'sort-desc');
-                const icon = sortHeader.querySelector('.sort-icon');
-                if (icon) icon.textContent = this.sortOrder === 'asc' ? '↑' : '↓';
-            }
         }
 
         toggleSelect(id, checked) {
-            if (checked) {
-                this.selectedIds.add(id);
-            } else {
-                this.selectedIds.delete(id);
-            }
+            if (checked) this.selectedIds.add(id);
+            else this.selectedIds.delete(id);
             this.renderClientTable();
         }
 
         toggleSelectAll(checkbox) {
             const clients = this.getFilteredClients();
-            if (checkbox.checked) {
-                clients.forEach(c => this.selectedIds.add(c.id));
-            } else {
-                this.selectedIds.clear();
-            }
+            if (checkbox.checked) clients.forEach(c => this.selectedIds.add(c.id));
+            else this.selectedIds.clear();
             this.renderClientTable();
-        }
-
-        updateBatchBar() {
-            const batchBar = document.getElementById('batchBar');
-            const countEl = document.getElementById('selectedCount');
-            const count = this.selectedIds.size;
-            
-            if (count > 0) {
-                batchBar.classList.add('show');
-                countEl.textContent = count;
-            } else {
-                batchBar.classList.remove('show');
-            }
-
-            const selectAll = document.getElementById('selectAll');
-            if (selectAll) {
-                const clients = this.getFilteredClients();
-                selectAll.checked = clients.length > 0 && count === clients.length;
-            }
         }
 
         deleteClient(id) {
             this.pendingAction = { type: 'delete', id };
             document.getElementById('modalTitle').textContent = '删除客户';
-            document.getElementById('modalBody').innerHTML = '<p>确定要删除此客户吗？此操作不可恢复。</p>';
-            document.getElementById('confirmModal').classList.add('show');
-        }
-
-        deleteSelected() {
-            if (this.selectedIds.size === 0) return;
-            this.pendingAction = { type: 'deleteSelected' };
-            document.getElementById('modalTitle').textContent = '批量删除';
-            document.getElementById('modalBody').innerHTML = `<p>确定要删除选中的 ${this.selectedIds.size} 位客户吗？此操作不可恢复。</p>`;
+            document.getElementById('modalBody').innerHTML = '<p>确定要删除此客户吗？</p>';
             document.getElementById('confirmModal').classList.add('show');
         }
 
         confirmAction() {
             if (!this.pendingAction) return;
-
             if (this.pendingAction.type === 'delete') {
                 this.clients = this.clients.filter(c => c.id !== this.pendingAction.id);
-                if (this.currentClientId === this.pendingAction.id) {
-                    this.currentClientId = null;
-                }
+                if (this.currentClientId === this.pendingAction.id) this.currentClientId = null;
                 this.showToast('success', '客户已删除');
-            } else if (this.pendingAction.type === 'deleteSelected') {
-                this.clients = this.clients.filter(c => !this.selectedIds.has(c.id));
-                if (this.selectedIds.has(this.currentClientId)) {
-                    this.currentClientId = null;
-                }
-                this.selectedIds.clear();
-                this.showToast('success', '批量删除成功');
             }
-
             this.saveClients();
             this.renderClientTable();
             this.updateStats();
-            this.closeModal('confirmModal');
+            document.getElementById('confirmModal').classList.remove('show');
             this.pendingAction = null;
         }
 
-        closeModal(modalId) {
-            document.getElementById(modalId).classList.remove('show');
+        closeModal(id) {
+            document.getElementById(id).classList.remove('show');
         }
 
         updateStats() {
             const total = this.clients.length;
             const completed = this.clients.filter(c => c.status === 'completed').length;
-            const pending = total - completed;
-
             document.getElementById('totalClients').textContent = total;
             document.getElementById('completedClients').textContent = completed;
-            document.getElementById('pendingClients').textContent = pending;
+            document.getElementById('pendingClients').textContent = total - completed;
         }
 
         exportExcel() {
-            if (this.clients.length === 0) {
-                this.showToast('error', '暂无数据可导出');
-                return;
-            }
+            if (this.clients.length === 0) { this.showToast('error', '暂无数据'); return; }
             this.doExport(this.clients, '全部客户数据');
         }
 
-        exportSelected() {
-            if (this.selectedIds.size === 0) {
-                this.showToast('error', '请先选择要导出的客户');
-                return;
-            }
-            const selected = this.clients.filter(c => this.selectedIds.has(c.id));
-            this.doExport(selected, `选中客户_${this.selectedIds.size}人`);
-        }
-
         doExport(clients, fileName) {
-            const allFields = Object.keys(FIELD_LABELS);
-            const data = clients.map(client => {
+            const data = clients.map(c => {
                 const row = {};
-                row['客户ID'] = client.id;
-                row['状态'] = client.status === 'completed' ? '已完成' : '进行中';
-                row['创建时间'] = new Date(client.createdAt).toLocaleString('zh-CN');
-                row['更新时间'] = new Date(client.updatedAt).toLocaleString('zh-CN');
-                row['完成时间'] = client.completedAt ? new Date(client.completedAt).toLocaleString('zh-CN') : '';
-                allFields.forEach(field => {
-                    row[FIELD_LABELS[field] || field] = client.data?.[field] || '';
-                });
+                row['客户ID'] = c.id;
+                row['状态'] = c.status === 'completed' ? '已完成' : '进行中';
+                row['创建时间'] = new Date(c.createdAt).toLocaleString('zh-CN');
+                row['更新时间'] = new Date(c.updatedAt).toLocaleString('zh-CN');
+                Object.entries(FIELD_LABELS).forEach(([k, v]) => row[v] = c.data?.[k] || '');
                 return row;
             });
 
             const ws = XLSX.utils.json_to_sheet(data);
-            ws['!cols'] = [{ wch: 12 }, { wch: 8 }, { wch: 20 }, { wch: 20 }, { wch: 20 }];
-            for (let i = 5; i < allFields.length + 5; i++) {
-                ws['!cols'].push({ wch: 15 });
-            }
-
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, '客户数据');
-
-            const dateStr = new Date().toISOString().split('T')[0];
-            XLSX.writeFile(wb, `九页问卷_${fileName}_${dateStr}.xlsx`);
+            XLSX.writeFile(wb, `九页问卷_${fileName}_${new Date().toISOString().split('T')[0]}.xlsx`);
             this.showToast('success', `已导出 ${clients.length} 条数据`);
         }
 
-        importExcel() {
-            document.getElementById('importFile').click();
-        }
+        importExcel() { document.getElementById('importFile').click(); }
 
         handleImport(event) {
             const file = event.target.files[0];
@@ -2178,40 +724,24 @@
             reader.onload = (e) => {
                 try {
                     const data = new Uint8Array(e.target.result);
-                    const workbook = XLSX.read(data, { type: 'array' });
-                    const sheetName = workbook.SheetNames[0];
-                    const worksheet = workbook.Sheets[sheetName];
-                    const json = XLSX.utils.sheet_to_json(worksheet);
+                    const wb = XLSX.read(data, { type: 'array' });
+                    const json = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
 
-                    let imported = 0;
-                    let updated = 0;
-
+                    let imported = 0, updated = 0;
                     json.forEach(row => {
                         const id = row['客户ID'] || Date.now().toString() + Math.random().toString(36).substr(2, 9);
                         const existingIndex = this.clients.findIndex(c => c.id === id);
-                        
                         const clientData = {};
-                        Object.entries(FIELD_LABELS).forEach(([key, label]) => {
-                            if (row[label] !== undefined && row[label] !== '') {
-                                clientData[key] = String(row[label]);
-                            }
+                        Object.entries(FIELD_LABELS).forEach(([k, v]) => {
+                            if (row[v] !== undefined && row[v] !== '') clientData[k] = String(row[v]);
                         });
 
                         if (existingIndex >= 0) {
-                            this.clients[existingIndex].data = {
-                                ...this.clients[existingIndex].data,
-                                ...clientData
-                            };
+                            this.clients[existingIndex].data = { ...this.clients[existingIndex].data, ...clientData };
                             this.clients[existingIndex].updatedAt = new Date().toISOString();
                             updated++;
                         } else {
-                            this.clients.unshift({
-                                id,
-                                data: clientData,
-                                status: row['状态'] === '已完成' ? 'completed' : 'pending',
-                                createdAt: new Date().toISOString(),
-                                updatedAt: new Date().toISOString()
-                            });
+                            this.clients.unshift({ id, data: clientData, status: row['状态'] === '已完成' ? 'completed' : 'pending', createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() });
                             imported++;
                         }
                     });
@@ -2221,8 +751,7 @@
                     this.updateStats();
                     this.showToast('success', `导入成功：新增 ${imported} 条，更新 ${updated} 条`);
                 } catch (err) {
-                    console.error('导入失败:', err);
-                    this.showToast('error', '导入失败，请检查文件格式');
+                    this.showToast('error', '导入失败');
                 }
             };
             reader.readAsArrayBuffer(file);
@@ -2230,18 +759,15 @@
         }
 
         generateShareQR() {
-            const url = window.location.href.split('?')[0];
-            const canvas = document.getElementById('qrCanvas');
-            if (canvas && typeof QRCode !== 'undefined') {
-                QRCode.toCanvas(canvas, url, {
-                    width: 200,
-                    margin: 2,
-                    color: { dark: '#0f172a', light: '#ffffff' }
-                }, (error) => {
-                    if (error) {
-                        console.error('二维码生成失败:', error);
-                    }
-                });
+            const url = window.location.href.split('?')[0].split('#')[0];
+            const container = document.getElementById('qrCanvas');
+            container.innerHTML = '';
+            
+            try {
+                new QRCode(container, { text: url, width: 200, height: 200, colorDark: '#0f172a', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.H });
+            } catch (e) {
+                console.error('分享二维码生成失败:', e);
+                container.innerHTML = '<p style="color:#ef4444;">二维码生成失败</p>';
             }
         }
 
@@ -2254,37 +780,28 @@
 
             const baseUrl = window.location.href.split('?')[0].split('#')[0];
             const url = baseUrl + `?client=${clientId}`;
-            const canvasContainer = document.getElementById('clientQRCanvas');
-            const qrName = document.getElementById('clientQRName');
-
-            canvasContainer.innerHTML = '<p style="color: var(--text-secondary);">正在生成二维码...</p>';
-            qrName.textContent = `客户：${client.data.name || '未命名'}`;
-
+            const container = document.getElementById('clientQRCanvas');
+            
+            container.innerHTML = '<p style="color:#94a3b8;">正在生成...</p>';
+            document.getElementById('clientQRName').textContent = `客户：${client.data.name || '未命名'}`;
             document.getElementById('clientQRModal').classList.add('show');
 
-            if (typeof QRCode === 'undefined') {
-                canvasContainer.innerHTML = '<p style="color: var(--danger);">二维码库加载失败，请刷新页面重试</p>';
-                return;
-            }
-
-            try {
-                QRCode.toDataURL(url, {
-                    width: 180,
-                    margin: 2,
-                    color: { dark: '#0f172a', light: '#ffffff' },
-                    errorCorrectionLevel: 'H'
-                }, (error, urlData) => {
-                    if (error) {
-                        console.error('二维码生成失败:', error);
-                        canvasContainer.innerHTML = `<p style="color: var(--danger);">生成失败: ${error.message || '未知错误'}</p>`;
-                    } else {
-                        canvasContainer.innerHTML = `<img src="${urlData}" style="width: 180px; height: 180px; border-radius: 8px;" alt="客户二维码">`;
-                    }
-                });
-            } catch (e) {
-                console.error('二维码生成异常:', e);
-                canvasContainer.innerHTML = `<p style="color: var(--danger);">生成异常: ${e.message}</p>`;
-            }
+            setTimeout(() => {
+                try {
+                    container.innerHTML = '';
+                    new QRCode(container, {
+                        text: url,
+                        width: 180,
+                        height: 180,
+                        colorDark: '#0f172a',
+                        colorLight: '#ffffff',
+                        correctLevel: QRCode.CorrectLevel.H
+                    });
+                } catch (e) {
+                    console.error('客户二维码生成失败:', e);
+                    container.innerHTML = `<p style="color:#ef4444;">生成失败: ${e.message}</p>`;
+                }
+            }, 100);
         }
 
         checkQRParams() {
@@ -2299,20 +816,13 @@
                     this.loadClientToForm();
                     this.switchTab('questionnaire');
                     this.updateCurrentClientInfo();
-                    this.hideAdminUI();
+                    document.querySelector('.main-tab[data-tab="clients"]').style.display = 'none';
+                    document.querySelector('.main-tab[data-tab="share"]').style.display = 'none';
                     this.showToast('info', `欢迎，${client.data.name || '客户'}！请填写问卷`);
-                    return true;
                 } else {
-                    this.showToast('error', '未找到该客户，请联系管理员');
-                    return false;
+                    this.showToast('error', '未找到该客户');
                 }
             }
-            return false;
-        }
-
-        hideAdminUI() {
-            document.querySelector('.main-tab[data-tab="clients"]').style.display = 'none';
-            document.querySelector('.main-tab[data-tab="share"]').style.display = 'none';
         }
 
         showToast(type, message) {
@@ -2321,10 +831,7 @@
             const icon = type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle';
             toast.innerHTML = `<i class="fas fa-${icon}"></i><span>${message}</span>`;
             document.body.appendChild(toast);
-            
-            setTimeout(() => {
-                toast.remove();
-            }, 3000);
+            setTimeout(() => toast.remove(), 3000);
         }
     }
 
