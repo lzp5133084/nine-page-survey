@@ -1559,6 +1559,25 @@
         </div>
     </div>
 
+    <div class="modal-overlay" id="clientQRModal">
+        <div class="modal" style="max-width: 400px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h3><i class="fas fa-qrcode"></i> 客户专属二维码</h3>
+                <button class="btn btn-outline btn-sm" onclick="app.closeModal('clientQRModal')" style="padding: 5px 10px;">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" style="text-align: center;">
+                <div id="clientQRCanvas" style="display: inline-block; padding: 15px; background: white; border-radius: 12px; margin-bottom: 15px;"></div>
+                <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 5px;" id="clientQRName">客户姓名</p>
+                <p style="color: var(--text-secondary); font-size: 12px;">扫码即可填写问卷，数据自动同步</p>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-primary" onclick="app.closeModal('clientQRModal')">关闭</button>
+            </div>
+        </div>
+    </div>
+
     <script>
     const STORAGE_KEY = 'nine_page_clients_v2';
     const FIELD_LABELS = {
@@ -1612,6 +1631,7 @@
             this.sortOrder = 'desc';
             this.selectedIds = new Set();
             this.pendingAction = null;
+            this.clientMode = false;
             this.init();
         }
 
@@ -1623,6 +1643,7 @@
             this.renderClientTable();
             this.updateStats();
             this.generateShareQR();
+            this.checkQRParams();
         }
 
         loadClients() {
@@ -1975,6 +1996,9 @@
                                 <button class="btn btn-primary btn-sm" onclick="app.editClient('${client.id}')">
                                     <i class="fas fa-edit"></i> 编辑
                                 </button>
+                                <button class="btn btn-success btn-sm" onclick="app.showClientQR('${client.id}')">
+                                    <i class="fas fa-qrcode"></i> 分享
+                                </button>
                                 <button class="btn btn-danger btn-sm" onclick="app.deleteClient('${client.id}')">
                                     <i class="fas fa-trash"></i> 删除
                                 </button>
@@ -2206,7 +2230,7 @@
         }
 
         generateShareQR() {
-            const url = window.location.href;
+            const url = window.location.href.split('?')[0];
             const canvas = document.getElementById('qrCanvas');
             if (canvas && typeof QRCode !== 'undefined') {
                 QRCode.toCanvas(canvas, url, {
@@ -2219,6 +2243,62 @@
                     }
                 });
             }
+        }
+
+        showClientQR(clientId) {
+            const client = this.clients.find(c => c.id === clientId);
+            if (!client) return;
+
+            const url = window.location.href.split('?')[0] + `?client=${clientId}`;
+            const canvasContainer = document.getElementById('clientQRCanvas');
+            canvasContainer.innerHTML = '';
+            const canvas = document.createElement('canvas');
+            canvasContainer.appendChild(canvas);
+
+            document.getElementById('clientQRName').textContent = `客户：${client.data.name || '未命名'}`;
+
+            if (typeof QRCode !== 'undefined') {
+                QRCode.toCanvas(canvas, url, {
+                    width: 180,
+                    margin: 2,
+                    color: { dark: '#0f172a', light: '#ffffff' }
+                }, (error) => {
+                    if (error) {
+                        console.error('客户二维码生成失败:', error);
+                        canvasContainer.innerHTML = '<p style="color: var(--danger);">二维码生成失败</p>';
+                    }
+                });
+            }
+
+            document.getElementById('clientQRModal').classList.add('show');
+        }
+
+        checkQRParams() {
+            const params = new URLSearchParams(window.location.search);
+            const clientId = params.get('client');
+            
+            if (clientId) {
+                const client = this.clients.find(c => c.id === clientId);
+                if (client) {
+                    this.currentClientId = clientId;
+                    this.clientMode = true;
+                    this.loadClientToForm();
+                    this.switchTab('questionnaire');
+                    this.updateCurrentClientInfo();
+                    this.hideAdminUI();
+                    this.showToast('info', `欢迎，${client.data.name || '客户'}！请填写问卷`);
+                    return true;
+                } else {
+                    this.showToast('error', '未找到该客户，请联系管理员');
+                    return false;
+                }
+            }
+            return false;
+        }
+
+        hideAdminUI() {
+            document.querySelector('.main-tab[data-tab="clients"]').style.display = 'none';
+            document.querySelector('.main-tab[data-tab="share"]').style.display = 'none';
         }
 
         showToast(type, message) {
