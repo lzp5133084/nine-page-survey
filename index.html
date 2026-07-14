@@ -30,6 +30,7 @@
         .btn-primary { background: linear-gradient(135deg, #00d4ff, #7c3aed); color: white; }
         .btn-success { background: linear-gradient(135deg, #10b981, #059669); color: white; }
         .btn-danger { background: linear-gradient(135deg, #ef4444, #dc2626); color: white; }
+        .btn-warning { background: linear-gradient(135deg, #f59e0b, #d97706); color: white; }
         .btn-outline { background: transparent; color: #00d4ff; border: 1px solid #00d4ff; }
         .btn-sm { padding: 6px 12px; font-size: 12px; }
         .filter-bar { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
@@ -54,7 +55,7 @@
         .progress-fill { background: linear-gradient(90deg, #00d4ff, #f472b6); height: 100%; width: 0%; transition: width 0.5s; }
         .progress-text { text-align: center; font-size: 0.85em; color: #94a3b8; }
         .page-nav { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; justify-content: center; }
-        .page-nav-btn { width: 40px; height: 40px; border-radius: 50%; border: 2px solid transparent; background: rgba(255,255,255,0.05); color: #94a3b8; cursor: pointer; font-weight: 600; font-size: 14px; transition: all 0.3s; }
+        .page-nav-btn { width: 42px; height: 42px; border-radius: 50%; border: 2px solid transparent; background: rgba(255,255,255,0.05); color: #94a3b8; cursor: pointer; font-weight: 600; font-size: 14px; transition: all 0.3s; }
         .page-nav-btn:hover { border-color: #00d4ff; color: #00d4ff; }
         .page-nav-btn.active { background: linear-gradient(135deg, #00d4ff, #7c3aed); color: white; }
         .page-nav-btn.completed { background: #10b981; color: white; }
@@ -62,33 +63,25 @@
         .page.active { display: block; animation: pageIn 0.3s ease; }
         @keyframes pageIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
         .page-title { font-size: 1.4em; margin-bottom: 20px; text-align: center; background: linear-gradient(135deg, #00d4ff, #f472b6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; padding-bottom: 12px; border-bottom: 2px solid rgba(0,212,255,0.2); }
+        .page-subtitle { font-size: 1.1em; margin: 20px 0 12px; color: #00d4ff; display: flex; align-items: center; gap: 8px; }
         .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; margin-bottom: 20px; }
         .form-group { display: flex; flex-direction: column; }
         .form-group label { margin-bottom: 6px; font-size: 13px; font-weight: 600; color: #94a3b8; }
+        .form-group label span.required { color: #ef4444; }
         .form-group input, .form-group select, .form-group textarea { padding: 12px 15px; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; font-size: 14px; background: rgba(255,255,255,0.03); color: #f1f5f9; font-family: inherit; }
         .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: #00d4ff; }
         .form-group textarea { resize: vertical; min-height: 80px; }
         .full-width { grid-column: 1 / -1; }
-        .form-nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 25px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.08); }
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); z-index: 10000; justify-content: center; align-items: center; padding: 20px; }
-        .modal-overlay.show { display: flex; }
-        .modal { background: linear-gradient(135deg, #1e293b, #0f172a); border-radius: 20px; padding: 30px; max-width: 450px; width: 100%; border: 1px solid rgba(255,255,255,0.1); }
-        .modal h3 { font-size: 1.3em; margin-bottom: 20px; text-align: center; background: linear-gradient(135deg, #00d4ff, #f472b6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-        .modal-body { margin-bottom: 25px; }
-        .modal-actions { display: flex; gap: 10px; justify-content: center; }
-        .toast { position: fixed; top: 20px; right: 20px; padding: 15px 25px; border-radius: 12px; color: white; font-weight: 600; z-index: 20000; animation: toastIn 0.3s ease; display: flex; align-items: center; gap: 10px; }
-        @keyframes toastIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-        .toast.success { background: linear-gradient(135deg, #10b981, #059669); }
-        .toast.error { background: linear-gradient(135deg, #ef4444, #dc2626); }
-        .toast.info { background: linear-gradient(135deg, #00d4ff, #7c3aed); }
-        .stat-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 20px; }
-        .stat-card { background: rgba(255,255,255,0.05); border-radius: 12px; padding: 15px; text-align: center; }
-        .stat-card .stat-value { font-size: 1.8em; font-weight: 800; background: linear-gradient(135deg, #00d4ff, #f472b6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-        .stat-card .stat-label { font-size: 0.8em; color: #94a3b8; margin-top: 4px; }
-        .qr-display { display: inline-block; padding: 20px; background: white; border-radius: 15px; margin: 20px 0; }
-        .qr-section { background: rgba(255,255,255,0.05); border-radius: 20px; padding: 25px; text-align: center; }
-        .batch-bar { display: none; padding: 12px; background: rgba(0,212,255,0.1); border-radius: 10px; margin-bottom: 15px; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
-        .batch-bar.show { display: flex; }
+        .asset-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; padding: 12px; background: rgba(255,255,255,0.03); border-radius: 10px; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.05); }
+        .asset-row .form-group { margin-bottom: 0; }
+        .add-row-btn { width: 100%; padding: 12px; border: 2px dashed rgba(255,255,255,0.2); border-radius: 10px; background: transparent; color: #00d4ff; cursor: pointer; font-size: 14px; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 10px; }
+        .add-row-btn:hover { border-color: #00d4ff; background: rgba(0,212,255,0.1); }
+        .remove-row-btn { background: rgba(239,68,68,0.2); color: #ef4444; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 12px; align-self: flex-end; }
+        .remove-row-btn:hover { background: rgba(239,68,68,0.3); }
+        .checkbox-group { display: flex; flex-wrap: wrap; gap: 12px; }
+        .checkbox-item { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+        .checkbox-item input[type="checkbox"] { accent-color: #00d4ff; }
+        .checkbox-item label { margin-bottom: 0; cursor: pointer; }
         @media (max-width: 768px) {
             .container { padding: 10px; }
             .app-header h1 { font-size: 1.4em; }
@@ -96,8 +89,7 @@
             .panel-header { flex-direction: column; align-items: flex-start; }
             .btn span { display: none; }
             .form-grid { grid-template-columns: 1fr; }
-            .client-table { font-size: 12px; }
-            .client-table-container { overflow-x: scroll; }
+            .asset-row { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -107,8 +99,8 @@
             <h1><i class="fas fa-sparkles"></i> 九页问卷客户管理系统</h1>
             <p class="subtitle">专业客户信息收集与智能管理平台</p>
             <div class="app-info">
-                <span><i class="fas fa-code"></i> v2.1</span>
-                <span><i class="far fa-calendar"></i> 2027-07-13</span>
+                <span><i class="fas fa-code"></i> v3.0</span>
+                <span><i class="far fa-calendar"></i> 2027-07-14</span>
                 <span><i class="fas fa-user-tie"></i> 军哥懂保</span>
                 <span><i class="fab fa-weixin"></i> xunijiayuan</span>
             </div>
@@ -186,118 +178,208 @@
                 <div class="page-nav" id="pageNav"></div>
 
                 <form id="questionnaireForm">
-                    <div class="page active" id="page1"><h2 class="page-title"><i class="fas fa-user"></i> 第一页：基础信息</h2>
+                    <div class="page active" id="page1">
+                        <h2 class="page-title"><i class="fas fa-user"></i> 第一页：客户基础信息</h2>
                         <div class="form-grid">
-                            <div class="form-group"><label>姓名 *</label><input type="text" name="name" placeholder="请输入姓名"></div>
+                            <div class="form-group"><label>姓名 <span class="required">*</span></label><input type="text" name="name" placeholder="请输入姓名"></div>
+                            <div class="form-group"><label>身份证号</label><input type="text" name="idCard" placeholder="请输入身份证号"></div>
                             <div class="form-group"><label>性别</label><select name="gender"><option value="">请选择</option><option value="男">男</option><option value="女">女</option></select></div>
                             <div class="form-group"><label>年龄</label><input type="number" name="age" min="1" max="120" placeholder="请输入年龄"></div>
                             <div class="form-group"><label>生日</label><input type="date" name="birthday"></div>
-                            <div class="form-group"><label>身份证号</label><input type="text" name="idCard" placeholder="请输入身份证号"></div>
-                            <div class="form-group"><label>联系电话 *</label><input type="tel" name="phone" placeholder="请输入手机号"></div>
+                            <div class="form-group"><label>生肖</label><select name="zodiac"><option value="">请选择</option><option value="鼠">鼠</option><option value="牛">牛</option><option value="虎">虎</option><option value="兔">兔</option><option value="龙">龙</option><option value="蛇">蛇</option><option value="马">马</option><option value="羊">羊</option><option value="猴">猴</option><option value="鸡">鸡</option><option value="狗">狗</option><option value="猪">猪</option></select></div>
+                            <div class="form-group"><label>星座</label><select name="constellation"><option value="">请选择</option><option value="白羊座">白羊座</option><option value="金牛座">金牛座</option><option value="双子座">双子座</option><option value="巨蟹座">巨蟹座</option><option value="狮子座">狮子座</option><option value="处女座">处女座</option><option value="天秤座">天秤座</option><option value="天蝎座">天蝎座</option><option value="射手座">射手座</option><option value="摩羯座">摩羯座</option><option value="水瓶座">水瓶座</option><option value="双鱼座">双鱼座</option></select></div>
+                            <div class="form-group"><label>出生地</label><input type="text" name="birthPlace" placeholder="请输入出生地"></div>
+                            <div class="form-group"><label>常住地</label><input type="text" name="address" placeholder="请输入常住地址"></div>
+                            <div class="form-group"><label>行业</label><input type="text" name="industry" placeholder="请输入行业"></div>
+                            <div class="form-group"><label>职业</label><input type="text" name="occupation" placeholder="请输入职业"></div>
+                            <div class="form-group"><label>公司职位</label><input type="text" name="position" placeholder="请输入公司职位"></div>
+                            <div class="form-group"><label>社保情况</label><select name="socialInsurance"><option value="">请选择</option><option value="已缴纳">已缴纳</option><option value="未缴纳">未缴纳</option><option value="部分缴纳">部分缴纳</option></select></div>
+                            <div class="form-group"><label>商保情况</label><select name="commercialInsurance"><option value="">请选择</option><option value="有">有</option><option value="无">无</option><option value="考虑中">考虑中</option></select></div>
+                            <div class="form-group"><label>常用电话 <span class="required">*</span></label><input type="tel" name="phone" placeholder="请输入手机号"></div>
                             <div class="form-group"><label>微信号</label><input type="text" name="wechat" placeholder="请输入微信号"></div>
-                            <div class="form-group"><label>所属行业</label><input type="text" name="industry" placeholder="请输入行业"></div>
-                            <div class="form-group"><label>任职公司</label><input type="text" name="company" placeholder="请输入公司名称"></div>
-                            <div class="form-group"><label>职位</label><input type="text" name="position" placeholder="请输入职位"></div>
-                            <div class="form-group full-width"><label>常驻地址</label><textarea name="address" placeholder="请输入常驻地址"></textarea></div>
-                            <div class="form-group full-width"><label>户籍地址</label><textarea name="registeredAddress" placeholder="请输入户籍地址"></textarea></div>
+                            <div class="form-group"><label>抖音号</label><input type="text" name="douyin" placeholder="请输入抖音号"></div>
+                            <div class="form-group"><label>邮箱号</label><input type="email" name="email" placeholder="请输入邮箱"></div>
+                            <div class="form-group"><label>常空闲时间段</label><input type="text" name="freeTime" placeholder="如：周末、晚上等"></div>
+                            <div class="form-group"><label>紧急联系人1</label><input type="text" name="emergencyContact1" placeholder="姓名 + 电话 + 关系"></div>
+                            <div class="form-group"><label>紧急联系人2</label><input type="text" name="emergencyContact2" placeholder="姓名 + 电话 + 关系"></div>
+                            <div class="form-group"><label>紧急联系人3</label><input type="text" name="emergencyContact3" placeholder="姓名 + 电话 + 关系"></div>
                         </div>
                     </div>
 
-                    <div class="page" id="page2"><h2 class="page-title"><i class="fas fa-shield-alt"></i> 第二页：保单情况</h2>
+                    <div class="page" id="page2">
+                        <h2 class="page-title"><i class="fas fa-coins"></i> 第二页：财务信息</h2>
                         <div class="form-grid">
-                            <div class="form-group"><label>保险公司</label><input type="text" name="insuranceCompany" placeholder="请输入保险公司"></div>
-                            <div class="form-group"><label>保险险种</label><input type="text" name="insuranceType" placeholder="请输入险种"></div>
-                            <div class="form-group"><label>缴费金额</label><input type="number" name="premiumAmount" step="0.01" placeholder="金额"></div>
-                            <div class="form-group"><label>保险期限</label><input type="text" name="insurancePeriod" placeholder="如：20年/终身"></div>
-                            <div class="form-group"><label>到期时间</label><input type="date" name="expiryDate"></div>
-                            <div class="form-group"><label>生存金</label><input type="text" name="survivalBenefit" placeholder="请输入生存金"></div>
-                            <div class="form-group full-width"><label>保险内容</label><textarea name="insuranceContent" placeholder="请详细描述保险内容"></textarea></div>
-                            <div class="form-group full-width"><label>额外权益</label><textarea name="additionalBenefits" placeholder="请描述额外权益"></textarea></div>
-                            <div class="form-group full-width"><label>其他保险</label><textarea name="otherInsurance" placeholder="请描述其他保险情况"></textarea></div>
-                        </div>
-                    </div>
-
-                    <div class="page" id="page3"><h2 class="page-title"><i class="fas fa-coins"></i> 第三页：财产情况</h2>
-                        <div class="form-grid">
-                            <div class="form-group"><label>定期存款</label><input type="number" name="deposits" step="0.01" placeholder="金额"></div>
-                            <div class="form-group"><label>国债</label><input type="number" name="bonds" step="0.01" placeholder="金额"></div>
+                            <div class="form-group"><label>劳动报酬（月薪）</label><input type="number" name="monthlySalary" step="0.01" placeholder="金额"></div>
+                            <div class="form-group"><label>年薪</label><input type="number" name="annualSalary" step="0.01" placeholder="金额"></div>
+                            <div class="form-group"><label>固定资产</label><input type="number" name="fixedAssets" step="0.01" placeholder="金额"></div>
+                            <div class="form-group"><label>流动资产</label><input type="number" name="liquidAssets" step="0.01" placeholder="金额"></div>
+                            <div class="form-group"><label>银行卡余额</label><input type="number" name="bankBalance" step="0.01" placeholder="金额"></div>
+                            <div class="form-group"><label>信用卡总额度</label><input type="number" name="creditCardLimit" step="0.01" placeholder="金额"></div>
+                            <div class="form-group"><label>信用卡已用</label><input type="number" name="creditCardUsed" step="0.01" placeholder="金额"></div>
+                            <div class="form-group"><label>银行贷款</label><input type="number" name="bankLoans" step="0.01" placeholder="金额"></div>
+                            <div class="form-group"><label>借支他人</label><input type="number" name="lentToOthers" step="0.01" placeholder="金额"></div>
+                            <div class="form-group"><label>借款</label><input type="number" name="borrowed" step="0.01" placeholder="金额"></div>
                             <div class="form-group"><label>基金</label><input type="number" name="funds" step="0.01" placeholder="金额"></div>
+                            <div class="form-group"><label>债券</label><input type="number" name="bonds" step="0.01" placeholder="金额"></div>
                             <div class="form-group"><label>股票</label><input type="number" name="stocks" step="0.01" placeholder="金额"></div>
+                            <div class="form-group"><label>定期存款</label><input type="number" name="deposits" step="0.01" placeholder="金额"></div>
+                            <div class="form-group"><label>国债</label><input type="number" name="treasuryBonds" step="0.01" placeholder="金额"></div>
                             <div class="form-group"><label>期权</label><input type="number" name="options" step="0.01" placeholder="金额"></div>
                             <div class="form-group"><label>股份</label><input type="number" name="shares" step="0.01" placeholder="金额"></div>
-                            <div class="form-group full-width"><label>车辆信息</label><textarea name="carInfo" placeholder="请描述车辆信息"></textarea></div>
-                            <div class="form-group full-width"><label>房产信息</label><textarea name="propertyInfo" placeholder="请描述房产信息"></textarea></div>
-                            <div class="form-group full-width"><label>其他固定资产</label><textarea name="otherAssets" placeholder="请描述其他固定资产"></textarea></div>
+                            <div class="form-group full-width"><label>其他财务信息</label><textarea name="otherFinance" placeholder="请描述其他财务信息"></textarea></div>
                         </div>
                     </div>
 
-                    <div class="page" id="page4"><h2 class="page-title"><i class="fas fa-credit-card"></i> 第四页：负债情况</h2>
+                    <div class="page" id="page3">
+                        <h2 class="page-title"><i class="fas fa-home"></i> 第三页：生活信息</h2>
                         <div class="form-grid">
-                            <div class="form-group"><label>信用卡</label><input type="text" name="creditCards" placeholder="总额度/已用额度"></div>
-                            <div class="form-group"><label>银行贷款</label><input type="number" name="bankLoans" step="0.01" placeholder="金额"></div>
-                            <div class="form-group"><label>花呗</label><input type="number" name="huabei" step="0.01" placeholder="金额"></div>
-                            <div class="form-group"><label>借呗</label><input type="number" name="jiebei" step="0.01" placeholder="金额"></div>
-                            <div class="form-group"><label>月付</label><input type="number" name="monthlyPayment" step="0.01" placeholder="金额"></div>
-                            <div class="form-group"><label>网贷</label><input type="number" name="onlineLoans" step="0.01" placeholder="金额"></div>
-                            <div class="form-group full-width"><label>第三方贷款</label><textarea name="thirdPartyLoans" placeholder="请描述第三方贷款情况"></textarea></div>
-                            <div class="form-group full-width"><label>借条</label><textarea name="iou" placeholder="请描述借条情况"></textarea></div>
-                            <div class="form-group full-width"><label>借支周转</label><textarea name="borrowing" placeholder="请描述借支周转情况"></textarea></div>
+                            <div class="form-group"><label>房产情况</label><select name="propertyStatus"><option value="">请选择</option><option value="自有全款">自有全款</option><option value="自有贷款">自有贷款</option><option value="租房">租房</option><option value="无房">无房</option></select></div>
+                            <div class="form-group"><label>房产数量</label><input type="number" name="propertyCount" min="0" placeholder="套数"></div>
+                            <div class="form-group"><label>车辆情况</label><select name="carStatus"><option value="">请选择</option><option value="自有">自有</option><option value="贷款">贷款</option><option value="无车">无车</option></select></div>
+                            <div class="form-group"><label>车辆数量</label><input type="number" name="carCount" min="0" placeholder="辆数"></div>
+                            <div class="form-group"><label>车辆品牌</label><input type="text" name="carBrand" placeholder="如：宝马、奔驰等"></div>
+                            <div class="form-group"><label>美食偏好</label><input type="text" name="foodPreference" placeholder="请输入美食偏好"></div>
+                            <div class="form-group"><label>运动爱好</label><input type="text" name="sportsHobby" placeholder="请输入运动爱好"></div>
+                            <div class="form-group"><label>兴趣爱好</label><input type="text" name="hobbies" placeholder="请输入兴趣爱好"></div>
+                            <div class="form-group"><label>重要日子</label><input type="text" name="importantDates" placeholder="如：生日、结婚纪念日等"></div>
+                            <div class="form-group"><label>日常社交圈子</label><input type="text" name="socialCircle" placeholder="请描述社交圈子特点"></div>
+                            <div class="form-group"><label>获得荣誉</label><input type="text" name="honors" placeholder="请输入获得的荣誉"></div>
+                            <div class="form-group"><label>人生梦想</label><input type="text" name="dreams" placeholder="请描述人生梦想"></div>
+                            <div class="form-group full-width"><label>车辆信息详情</label><textarea name="carInfo" placeholder="请详细描述车辆信息"></textarea></div>
+                            <div class="form-group full-width"><label>房产信息详情</label><textarea name="propertyInfo" placeholder="请详细描述房产信息"></textarea></div>
+                            <div class="form-group full-width"><label>个人特长</label><textarea name="strengths" placeholder="请描述个人特长"></textarea></div>
                         </div>
                     </div>
 
-                    <div class="page" id="page5"><h2 class="page-title"><i class="fas fa-home"></i> 第五页：家庭结构</h2>
+                    <div class="page" id="page4">
+                        <h2 class="page-title"><i class="fas fa-users"></i> 第四页：家庭结构与社保情况</h2>
                         <div class="form-grid">
                             <div class="form-group"><label>婚姻状况</label><select name="maritalStatus"><option value="">请选择</option><option value="未婚">未婚</option><option value="已婚">已婚</option><option value="离异">离异</option><option value="丧偶">丧偶</option></select></div>
                             <div class="form-group"><label>结婚时间</label><input type="date" name="marriageDate"></div>
-                            <div class="form-group"><label>家庭收入</label><input type="number" name="familyIncome" step="0.01" placeholder="年收入"></div>
-                            <div class="form-group"><label>家庭支出</label><input type="number" name="familyExpenses" step="0.01" placeholder="年支出"></div>
-                            <div class="form-group full-width"><label>配偶信息</label><textarea name="spouseInfo" placeholder="请描述配偶信息"></textarea></div>
-                            <div class="form-group full-width"><label>子女信息</label><textarea name="childrenInfo" placeholder="请描述子女信息"></textarea></div>
-                            <div class="form-group full-width"><label>父母情况</label><textarea name="parents" placeholder="请描述父母情况"></textarea></div>
-                            <div class="form-group full-width"><label>兄弟姊妹</label><textarea name="siblings" placeholder="请描述兄弟姊妹情况"></textarea></div>
+                            <div class="form-group"><label>家庭人口</label><input type="number" name="familyMembers" min="1" placeholder="人数"></div>
+                            <div class="form-group"><label>是否有子女</label><select name="hasChildren"><option value="">请选择</option><option value="是">是</option><option value="否">否</option></select></div>
+                        </div>
+                        <div class="page-subtitle"><i class="fas fa-user-friends"></i> 家庭成员详情</div>
+                        <div id="familyMembersList"></div>
+                        <button type="button" class="add-row-btn" onclick="app.addFamilyMemberRow()">
+                            <i class="fas fa-plus"></i> 添加家庭成员
+                        </button>
+                        <div class="page-subtitle" style="margin-top:30px;"><i class="fas fa-shield-alt"></i> 惠民保（泸惠保）</div>
+                        <div class="form-grid">
+                            <div class="form-group"><label>是否购买泸惠保</label><select name="luhuibao"><option value="">请选择</option><option value="已购买">已购买</option><option value="未购买">未购买</option><option value="考虑中">考虑中</option></select></div>
+                            <div class="form-group"><label>购买时间</label><input type="date" name="luhuibaoDate"></div>
+                            <div class="form-group"><label>保障金额</label><input type="number" name="luhuibaoAmount" step="0.01" placeholder="金额"></div>
+                            <div class="form-group full-width"><label>惠民保备注</label><textarea name="luhuibaoNote" placeholder="请描述惠民保相关信息"></textarea></div>
                         </div>
                     </div>
 
-                    <div class="page" id="page6"><h2 class="page-title"><i class="fas fa-users"></i> 第六页：社会情况</h2>
+                    <div class="page" id="page5">
+                        <h2 class="page-title"><i class="fas fa-file-contract"></i> 第五页：商业保单整理</h2>
+                        <div id="policiesList"></div>
+                        <button type="button" class="add-row-btn" onclick="app.addPolicyRow()">
+                            <i class="fas fa-plus"></i> 添加保单
+                        </button>
+                    </div>
+
+                    <div class="page" id="page6">
+                        <h2 class="page-title"><i class="fas fa-chart-pie"></i> 第六页：保障整理汇总情况</h2>
+                        <div class="page-subtitle"><i class="fas fa-user"></i> 人保保障情况</div>
                         <div class="form-grid">
-                            <div class="form-group"><label>紧急联系人</label><input type="text" name="emergencyContact" placeholder="姓名 + 电话"></div>
-                            <div class="form-group"><label>备用联系人</label><input type="text" name="backupContact" placeholder="姓名 + 电话"></div>
-                            <div class="form-group full-width"><label>兴趣爱好</label><textarea name="hobbies" placeholder="请描述兴趣爱好"></textarea></div>
-                            <div class="form-group full-width"><label>社交圈子</label><textarea name="friends" placeholder="请描述社交圈子特点"></textarea></div>
-                            <div class="form-group full-width"><label>个人特长</label><textarea name="strengths" placeholder="请描述个人特长"></textarea></div>
-                            <div class="form-group full-width"><label>骄傲成就</label><textarea name="proudMoments" placeholder="请描述人生中的骄傲成就"></textarea></div>
+                            <div class="form-group"><label>身价保障</label><input type="number" name="lifeInsurance" step="0.01" placeholder="金额"></div>
+                            <div class="form-group"><label>重疾保障</label><input type="number" name="criticalIllness" step="0.01" placeholder="金额"></div>
+                            <div class="form-group"><label>意外保障</label><input type="number" name="accidentInsurance" step="0.01" placeholder="金额"></div>
+                            <div class="form-group"><label>医疗保障</label><input type="number" name="medicalInsurance" step="0.01" placeholder="金额"></div>
+                            <div class="form-group"><label>其他保障</label><input type="number" name="otherInsurance" step="0.01" placeholder="金额"></div>
+                        </div>
+                        <div class="page-subtitle"><i class="fas fa-building"></i> 财保/企保情况</div>
+                        <div class="form-grid">
+                            <div class="form-group"><label>财产保险</label><input type="number" name="propertyInsurance" step="0.01" placeholder="金额"></div>
+                            <div class="form-group"><label>企业保险</label><input type="number" name="enterpriseInsurance" step="0.01" placeholder="金额"></div>
+                            <div class="form-group"><label>缴费月份</label><input type="number" name="paymentMonths" min="1" placeholder="月数"></div>
+                            <div class="form-group"><label>长缴险种数</label><input type="number" name="longTermPolicies" min="0" placeholder="数量"></div>
+                            <div class="form-group"><label>短缴险种数</label><input type="number" name="shortTermPolicies" min="0" placeholder="数量"></div>
+                            <div class="form-group"><label>纯保障型份数</label><input type="number" name="pureProtection" min="0" placeholder="份数"></div>
+                            <div class="form-group"><label>纯理财型份数</label><input type="number" name="pureInvestment" min="0" placeholder="份数"></div>
+                            <div class="form-group"><label>综合型险种数</label><input type="number" name="comprehensivePolicies" min="0" placeholder="数量"></div>
+                            <div class="form-group full-width"><label>其他保障备注</label><textarea name="otherInsuranceNote" placeholder="请描述其他保障情况"></textarea></div>
                         </div>
                     </div>
 
-                    <div class="page" id="page7"><h2 class="page-title"><i class="fas fa-star"></i> 第七页：人生定义</h2>
-                        <div class="form-grid">
-                            <div class="form-group full-width"><label>人生节点</label><textarea name="lifeMilestones" placeholder="人生中的重要节点"></textarea></div>
-                            <div class="form-group full-width"><label>重大事件</label><textarea name="keyEvents" placeholder="影响人生的重大事件"></textarea></div>
-                            <div class="form-group full-width"><label>重要认知</label><textarea name="importantInsights" placeholder="人生中的重要认知和感悟"></textarea></div>
-                            <div class="form-group full-width"><label>重要改变</label><textarea name="significantChanges" placeholder="人生中的重要改变和转折"></textarea></div>
-                            <div class="form-group full-width"><label>未来规划</label><textarea name="futurePlans" placeholder="对未来的规划和期待"></textarea></div>
+                    <div class="page" id="page7">
+                        <h2 class="page-title"><i class="fas fa-heart"></i> 第七页：健康管理及权益整理</h2>
+                        <div class="page-subtitle"><i class="fas fa-stethoscope"></i> 寿险权益</div>
+                        <div class="checkbox-group" style="margin-bottom:20px;">
+                            <div class="checkbox-item"><input type="checkbox" name="lifeBenefits" value="就医绿通"><label>就医绿通</label></div>
+                            <div class="checkbox-item"><input type="checkbox" name="lifeBenefits" value="代挂号"><label>代挂号</label></div>
+                            <div class="checkbox-item"><input type="checkbox" name="lifeBenefits" value="住院安排"><label>住院安排</label></div>
+                            <div class="checkbox-item"><input type="checkbox" name="lifeBenefits" value="体检"><label>体检</label></div>
+                            <div class="checkbox-item"><input type="checkbox" name="lifeBenefits" value="二诊"><label>二诊</label></div>
+                            <div class="checkbox-item"><input type="checkbox" name="lifeBenefits" value="图文问诊"><label>图文问诊</label></div>
+                            <div class="checkbox-item"><input type="checkbox" name="lifeBenefits" value="视频问诊"><label>视频问诊</label></div>
+                            <div class="checkbox-item"><input type="checkbox" name="lifeBenefits" value="律师咨询"><label>律师咨询</label></div>
+                            <div class="checkbox-item"><input type="checkbox" name="lifeBenefits" value="居家养老管家"><label>居家养老管家</label></div>
+                            <div class="checkbox-item"><input type="checkbox" name="lifeBenefits" value="适老化改造"><label>适老化改造</label></div>
+                            <div class="checkbox-item"><input type="checkbox" name="lifeBenefits" value="颐享城居养"><label>颐享城居养</label></div>
+                        </div>
+                        <div class="page-subtitle"><i class="fas fa-shield-medical"></i> 百万医疗权益</div>
+                        <div class="checkbox-group" style="margin-bottom:20px;">
+                            <div class="checkbox-item"><input type="checkbox" name="medicalBenefits" value="门诊就医协助(1次)"><label>门诊就医协助(1次)</label></div>
+                            <div class="checkbox-item"><input type="checkbox" name="medicalBenefits" value="VIP门诊协助(不限次)"><label>VIP门诊协助(不限次)</label></div>
+                            <div class="checkbox-item"><input type="checkbox" name="medicalBenefits" value="接送陪诊(1次)"><label>接送陪诊(1次)</label></div>
+                            <div class="checkbox-item"><input type="checkbox" name="medicalBenefits" value="国内重疾二诊(1次)"><label>国内重疾二诊(1次)</label></div>
+                            <div class="checkbox-item"><input type="checkbox" name="medicalBenefits" value="肿瘤多学科会诊(1次)"><label>肿瘤多学科会诊(1次)</label></div>
+                            <div class="checkbox-item"><input type="checkbox" name="medicalBenefits" value="住院就医协助(12次)"><label>住院就医协助(12次)</label></div>
+                            <div class="checkbox-item"><input type="checkbox" name="medicalBenefits" value="住院探视(1次/住院)"><label>住院探视(1次/住院)</label></div>
+                            <div class="checkbox-item"><input type="checkbox" name="medicalBenefits" value="7天住院陪护(12次)"><label>7天住院陪护(12次)</label></div>
+                            <div class="checkbox-item"><input type="checkbox" name="medicalBenefits" value="住院垫付服务"><label>住院垫付服务</label></div>
+                            <div class="checkbox-item"><input type="checkbox" name="medicalBenefits" value="出院交通(1次/住院)"><label>出院交通(1次/住院)</label></div>
+                            <div class="checkbox-item"><input type="checkbox" name="medicalBenefits" value="院后上门护理(3次/住期)"><label>院后上门护理(3次/住期)</label></div>
+                            <div class="checkbox-item"><input type="checkbox" name="medicalBenefits" value="健康活力GO"><label>健康活力GO</label></div>
+                        </div>
+                        <div class="page-subtitle"><i class="fas fa-car"></i> 车险权益</div>
+                        <div class="checkbox-group" style="margin-bottom:20px;">
+                            <div class="checkbox-item"><input type="checkbox" name="carBenefits" value="平安好车主代审车"><label>平安好车主代审车</label></div>
+                            <div class="checkbox-item"><input type="checkbox" name="carBenefits" value="每月会员礼包"><label>每月会员礼包</label></div>
+                            <div class="checkbox-item"><input type="checkbox" name="carBenefits" value="代驾券"><label>代驾券</label></div>
+                            <div class="checkbox-item"><input type="checkbox" name="carBenefits" value="洗车券"><label>洗车券</label></div>
+                            <div class="checkbox-item"><input type="checkbox" name="carBenefits" value="车辆检测"><label>车辆检测</label></div>
+                            <div class="checkbox-item"><input type="checkbox" name="carBenefits" value="违章处理"><label>违章处理</label></div>
+                            <div class="checkbox-item"><input type="checkbox" name="carBenefits" value="信任赔资格"><label>信任赔资格</label></div>
+                        </div>
+                        <div class="page-subtitle"><i class="fas fa-gift"></i> 其他权益</div>
+                        <div class="checkbox-group" style="margin-bottom:20px;">
+                            <div class="checkbox-item"><input type="checkbox" name="otherBenefits" value="百万医疗险"><label>百万医疗险</label></div>
+                            <div class="checkbox-item"><input type="checkbox" name="otherBenefits" value="合家欢"><label>合家欢</label></div>
+                            <div class="checkbox-item"><input type="checkbox" name="otherBenefits" value="泸惠保"><label>泸惠保</label></div>
+                            <div class="checkbox-item"><input type="checkbox" name="otherBenefits" value="企业团体意外险"><label>企业团体意外险</label></div>
+                            <div class="checkbox-item"><input type="checkbox" name="otherBenefits" value="518权益"><label>518权益</label></div>
+                            <div class="checkbox-item"><input type="checkbox" name="otherBenefits" value="金管家"><label>金管家</label></div>
                         </div>
                     </div>
 
-                    <div class="page" id="page8"><h2 class="page-title"><i class="fas fa-heart"></i> 第八页：生活困境</h2>
-                        <div class="form-grid">
-                            <div class="form-group full-width"><label>工作感受</label><textarea name="workFeelings" placeholder="对当前工作的感受和想法"></textarea></div>
-                            <div class="form-group full-width"><label>家庭状态</label><textarea name="familyStatus" placeholder="当前家庭状态描述"></textarea></div>
-                            <div class="form-group full-width"><label>未来希望</label><textarea name="futureHopes" placeholder="对未来的希望和期许"></textarea></div>
-                            <div class="form-group full-width"><label>重要关系排序</label><textarea name="loveRanking" placeholder="人生中重要关系的排序及原因"></textarea></div>
-                            <div class="form-group full-width"><label>最大困扰</label><textarea name="biggestConcern" placeholder="目前最大的困扰和担忧"></textarea></div>
-                        </div>
+                    <div class="page" id="page8">
+                        <h2 class="page-title"><i class="fas fa-notes-medical"></i> 第八页：体检与理赔记录</h2>
+                        <div class="page-subtitle"><i class="fas fa-file-medical"></i> 体检记录</div>
+                        <div id="medicalRecordsList"></div>
+                        <button type="button" class="add-row-btn" onclick="app.addMedicalRecordRow()">
+                            <i class="fas fa-plus"></i> 添加体检记录
+                        </button>
+                        <div class="page-subtitle" style="margin-top:30px;"><i class="fas fa-clipboard-list"></i> 理赔记录</div>
+                        <div id="claimRecordsList"></div>
+                        <button type="button" class="add-row-btn" onclick="app.addClaimRecordRow()">
+                            <i class="fas fa-plus"></i> 添加理赔记录
+                        </button>
                     </div>
 
-                    <div class="page" id="page9"><h2 class="page-title"><i class="fas fa-mobile-alt"></i> 第九页：高频工具</h2>
+                    <div class="page" id="page9">
+                        <h2 class="page-title"><i class="fas fa-lightbulb"></i> 第九页：保障检视建议与总结</h2>
                         <div class="form-grid">
-                            <div class="form-group"><label>微信使用</label><select name="wechatUsage"><option value="">请选择</option><option value="频繁">频繁</option><option value="一般">一般</option><option value="较少">较少</option><option value="不使用">不使用</option></select></div>
-                            <div class="form-group"><label>金事通</label><select name="jinshitong"><option value="">请选择</option><option value="经常使用">经常使用</option><option value="偶尔使用">偶尔使用</option><option value="了解但不用">了解但不用</option><option value="不了解">不了解</option></select></div>
-                            <div class="form-group"><label>交管12123</label><select name="traffic12123"><option value="">请选择</option><option value="经常使用">经常使用</option><option value="偶尔使用">偶尔使用</option><option value="了解但不用">了解但不用</option><option value="不了解">不了解</option></select></div>
-                            <div class="form-group"><label>数字化程度</label><select name="digitalLevel"><option value="">请选择</option><option value="高">高</option><option value="中">中</option><option value="低">低</option></select></div>
-                            <div class="form-group full-width"><label>财务工具</label><textarea name="financeAssistant" placeholder="使用的财务工具/APP"></textarea></div>
-                            <div class="form-group full-width"><label>AI工具</label><textarea name="aiTools" placeholder="使用的AI工具"></textarea></div>
-                            <div class="form-group full-width"><label>其他APP</label><textarea name="otherApps" placeholder="其他高频使用的APP"></textarea></div>
+                            <div class="form-group"><label>检视人员</label><input type="text" name="reviewer" placeholder="请输入检视人员姓名"></div>
+                            <div class="form-group"><label>检视日期</label><input type="date" name="reviewDate"></div>
+                            <div class="form-group full-width"><label>保障检视建议</label><textarea name="reviewSuggestion" rows="8" placeholder="请输入保障检视建议"></textarea></div>
+                            <div class="form-group full-width"><label>风险评估</label><textarea name="riskAssessment" rows="5" placeholder="请输入风险评估内容"></textarea></div>
+                            <div class="form-group full-width"><label>改进方案</label><textarea name="improvementPlan" rows="5" placeholder="请输入改进方案"></textarea></div>
+                            <div class="form-group full-width"><label>备注说明</label><textarea name="remarks" rows="3" placeholder="请输入备注说明"></textarea></div>
                         </div>
                     </div>
                 </form>
@@ -306,7 +388,8 @@
                     <button class="btn btn-outline" id="prevBtn" onclick="app.prevPage()"><i class="fas fa-chevron-left"></i> 上一页</button>
                     <div style="display:flex;gap:10px;">
                         <button class="btn btn-primary" onclick="app.saveCurrentClient()"><i class="fas fa-save"></i> 保存</button>
-                        <button class="btn btn-success" id="completeBtn" style="display:none;" onclick="app.completeQuestionnaire()"><i class="fas fa-check"></i> 完成</button>这么多错误。                        <button class="btn btn-warning" id="submitBtn" style="display:none;" onclick="app.showSubmitQR()"><i class="fas fa-paper-plane"></i> 提交</button>
+                        <button class="btn btn-success" id="completeBtn" style="display:none;" onclick="app.completeQuestionnaire()"><i class="fas fa-check"></i> 完成</button>
+                        <button class="btn btn-warning" id="submitBtn" style="display:none;" onclick="app.showSubmitQR()"><i class="fas fa-paper-plane"></i> 提交</button>
                     </div>
                     <button class="btn btn-primary" id="nextBtn" onclick="app.nextPage()">下一页 <i class="fas fa-chevron-right"></i></button>
                 </div>
@@ -324,7 +407,7 @@
     </div>
 
     <div class="modal-overlay" id="confirmModal">
-        <div class="modal"><h3 id="modalTitle">确认操作</h3><div class="modal-body" id="modalBody"><p>确定要执行此操作吗？</p></div><div class="modal-actions"><button class="btn btn-outline" onclick="app.closeModal('confirmModal')">取消</button><button class="btn btn-danger" onclick="app.confirmAction()">确认</button></div></div>
+        <div class="modal"><h3 id="modalTitle">确认操作</h3><div class="modal-body" id="modalBody"><p>确定要执行此操作吗？</p></div><div class="modal-actions"><button class="btn btn-outline" onclick="app.closeModal('confirmModal')">取消</button><button class="btn btn-danger" id="confirmBtn" onclick="app.confirmAction()">确认</button></div></div>
     </div>
 
     <div class="modal-overlay" id="clientQRModal">
@@ -342,50 +425,32 @@
         </div>
     </div>
 
-    <div class="modal-overlay" id="submitQRModal">
-        <div class="modal" style="max-width:400px;">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
-                <h3><i class="fas fa-check-circle"></i> 问卷已填写完成</h3>
-                <button class="btn btn-outline btn-sm" onclick="app.closeModal('submitQRModal')"><i class="fas fa-times"></i></button>
-            </div>
-            <div class="modal-body" style="text-align:center;">
-                <p style="margin-bottom:15px;color:#94a3b8;">请将下方二维码出示给管理员，或导出Excel文件</p>
-                <div id="submitQRCanvas" style="display:inline-block;padding:15px;background:white;border-radius:12px;margin-bottom:15px;"></div>
-                <p style="color:#f1f5f9;font-size:14px;font-weight:600;margin-bottom:5px;" id="submitQRName">客户姓名</p>
-                <p style="color:#94a3b8;font-size:12px;">管理员扫码即可获取您的问卷数据</p>
-            </div>
-            <div class="modal-actions" style="flex-direction:column;gap:10px;">
-                <button class="btn btn-success" onclick="app.exportCurrentClient()"><i class="fas fa-file-excel"></i> 导出Excel发给管理员</button>
-                <button class="btn btn-outline" onclick="app.closeModal('submitQRModal')">关闭</button>
-            </div>
-        </div>
-    </div>
-
     <script>
-    const STORAGE_KEY = 'nine_page_clients_v3';
+    const STORAGE_KEY = 'nine_page_clients_v4';
     const FIELD_LABELS = {
-        name: '姓名', idCard: '身份证号', gender: '性别', age: '年龄', birthday: '生日',
-        phone: '联系电话', wechat: '微信号', industry: '所属行业', company: '任职公司',
-        position: '职位', address: '常驻地址', registeredAddress: '户籍地址',
-        insuranceCompany: '保险公司', insuranceType: '保险险种', premiumAmount: '缴费金额',
-        insurancePeriod: '保险期限', expiryDate: '到期时间', survivalBenefit: '生存金',
-        insuranceContent: '保险内容', additionalBenefits: '额外权益', otherInsurance: '其他保险',
-        deposits: '定期存款', bonds: '国债', funds: '基金', stocks: '股票',
-        options: '期权', shares: '股份', carInfo: '车辆信息', propertyInfo: '房产信息',
-        otherAssets: '其他固定资产', creditCards: '信用卡', bankLoans: '银行贷款',
-        huabei: '花呗', jiebei: '借呗', monthlyPayment: '月付', onlineLoans: '网贷',
-        thirdPartyLoans: '第三方贷款', iou: '借条', borrowing: '借支周转',
-        maritalStatus: '婚姻状况', marriageDate: '结婚时间', spouseInfo: '配偶信息',
-        childrenInfo: '子女信息', parents: '父母情况', siblings: '兄弟姊妹',
-        familyIncome: '家庭收入', familyExpenses: '家庭支出',
-        emergencyContact: '紧急联系人', backupContact: '备用联系人',
-        hobbies: '兴趣爱好', friends: '社交圈子', strengths: '个人特长',
-        proudMoments: '骄傲成就', lifeMilestones: '人生节点', keyEvents: '重大事件',
-        importantInsights: '重要认知', significantChanges: '重要改变', futurePlans: '未来规划',
-        workFeelings: '工作感受', familyStatus: '家庭状态', futureHopes: '未来希望',
-        loveRanking: '重要关系排序', biggestConcern: '最大困扰',
-        wechatUsage: '微信使用', jinshitong: '金事通', traffic12123: '交管12123',
-        digitalLevel: '数字化程度', financeAssistant: '财务工具', aiTools: 'AI工具', otherApps: '其他APP'
+        name: '姓名', idCard: '身份证号', gender: '性别', age: '年龄', birthday: '生日', zodiac: '生肖', constellation: '星座',
+        birthPlace: '出生地', address: '常住地', industry: '行业', occupation: '职业', position: '公司职位',
+        socialInsurance: '社保情况', commercialInsurance: '商保情况', phone: '常用电话', wechat: '微信号',
+        douyin: '抖音号', email: '邮箱号', freeTime: '常空闲时间段',
+        emergencyContact1: '紧急联系人1', emergencyContact2: '紧急联系人2', emergencyContact3: '紧急联系人3',
+        monthlySalary: '劳动报酬(月薪)', annualSalary: '年薪', fixedAssets: '固定资产', liquidAssets: '流动资产',
+        bankBalance: '银行卡余额', creditCardLimit: '信用卡总额度', creditCardUsed: '信用卡已用', bankLoans: '银行贷款',
+        lentToOthers: '借支他人', borrowed: '借款', funds: '基金', bonds: '债券', stocks: '股票',
+        deposits: '定期存款', treasuryBonds: '国债', options: '期权', shares: '股份', otherFinance: '其他财务信息',
+        propertyStatus: '房产情况', propertyCount: '房产数量', carStatus: '车辆情况', carCount: '车辆数量',
+        carBrand: '车辆品牌', foodPreference: '美食偏好', sportsHobby: '运动爱好', hobbies: '兴趣爱好',
+        importantDates: '重要日子', socialCircle: '日常社交圈子', honors: '获得荣誉', dreams: '人生梦想',
+        carInfo: '车辆信息详情', propertyInfo: '房产信息详情', strengths: '个人特长',
+        maritalStatus: '婚姻状况', marriageDate: '结婚时间', familyMembers: '家庭人口', hasChildren: '是否有子女',
+        luhuibao: '是否购买泸惠保', luhuibaoDate: '购买时间', luhuibaoAmount: '保障金额', luhuibaoNote: '惠民保备注',
+        lifeInsurance: '身价保障', criticalIllness: '重疾保障', accidentInsurance: '意外保障',
+        medicalInsurance: '医疗保障', otherInsurance: '其他保障', propertyInsurance: '财产保险',
+        enterpriseInsurance: '企业保险', paymentMonths: '缴费月份', longTermPolicies: '长缴险种数',
+        shortTermPolicies: '短缴险种数', pureProtection: '纯保障型份数', pureInvestment: '纯理财型份数',
+        comprehensivePolicies: '综合型险种数', otherInsuranceNote: '其他保障备注',
+        lifeBenefits: '寿险权益', medicalBenefits: '百万医疗权益', carBenefits: '车险权益', otherBenefits: '其他权益',
+        reviewer: '检视人员', reviewDate: '检视日期', reviewSuggestion: '保障检视建议',
+        riskAssessment: '风险评估', improvementPlan: '改进方案', remarks: '备注说明'
     };
 
     class QuestionnaireApp {
@@ -427,7 +492,7 @@
 
         initPageNav() {
             const nav = document.getElementById('pageNav');
-            const names = ['基础信息', '保单情况', '财产情况', '负债情况', '家庭结构', '社会情况', '人生定义', '生活困境', '高频工具'];
+            const names = ['基础信息', '财务信息', '生活信息', '家庭社保', '保单整理', '保障汇总', '权益整理', '体检理赔', '检视建议'];
             nav.innerHTML = names.map((n, i) => 
                 `<button class="page-nav-btn ${i === 0 ? 'active' : ''}" data-page="${i+1}" onclick="app.goToPage(${i+1})" title="${n}">${i+1}</button>`
             ).join('');
@@ -439,12 +504,6 @@
                     document.querySelectorAll('.main-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab.dataset.tab));
                     document.querySelectorAll('.tab-content').forEach(c => c.classList.toggle('active', c.id === `tab-${tab.dataset.tab}`));
                 });
-            });
-
-            const inputs = document.querySelectorAll('#questionnaireForm input, #questionnaireForm select, #questionnaireForm textarea');
-            inputs.forEach(input => {
-                input.addEventListener('input', () => this.onFieldChange());
-                input.addEventListener('change', () => this.onFieldChange());
             });
         }
 
@@ -486,11 +545,18 @@
 
             if (client && client.data) {
                 Object.entries(client.data).forEach(([k, v]) => {
-                    const input = form.querySelector(`[name="${k}"]`);
-                    if (input) input.value = v;
+                    const inputs = form.querySelectorAll(`[name="${k}"]`);
+                    inputs.forEach(input => {
+                        if (input.type === 'checkbox') {
+                            input.checked = (v || '').includes(input.value);
+                        } else {
+                            input.value = v;
+                        }
+                    });
                 });
             }
 
+            this.renderDynamicLists();
             this.goToPage(1);
             this.updateProgress();
             this.updatePageNav();
@@ -506,12 +572,6 @@
             document.getElementById('currentClientName').textContent = client && client.data.name ? `当前客户：${client.data.name}` : '新客户（未命名）';
         }
 
-        onFieldChange() {
-            this.collectFormData();
-            this.updateProgress();
-            this.updatePageNav();
-        }
-
         collectFormData() {
             const client = this.getCurrentClient();
             if (!client) return;
@@ -520,11 +580,81 @@
             const formData = new FormData(form);
             
             client.data = {};
+            const checkboxes = {};
+            
             for (let [k, v] of formData.entries()) {
-                if (v.trim()) client.data[k] = v.trim();
+                const input = form.querySelector(`[name="${k}"]`);
+                if (input && input.type === 'checkbox') {
+                    if (!checkboxes[k]) checkboxes[k] = [];
+                    checkboxes[k].push(v);
+                } else if (v.trim()) {
+                    client.data[k] = v.trim();
+                }
             }
+            
+            Object.entries(checkboxes).forEach(([k, vals]) => {
+                client.data[k] = vals.join(',');
+            });
+
+            client.data.familyMembersList = this.collectFamilyMembers();
+            client.data.policiesList = this.collectPolicies();
+            client.data.medicalRecordsList = this.collectMedicalRecords();
+            client.data.claimRecordsList = this.collectClaimRecords();
+
             client.updatedAt = new Date().toISOString();
             return client;
+        }
+
+        collectFamilyMembers() {
+            const rows = document.querySelectorAll('#familyMembersList .asset-row');
+            const list = [];
+            rows.forEach(row => {
+                const item = {};
+                row.querySelectorAll('input, select').forEach(input => {
+                    if (input.value.trim()) item[input.name] = input.value.trim();
+                });
+                if (Object.keys(item).length > 0) list.push(item);
+            });
+            return list;
+        }
+
+        collectPolicies() {
+            const rows = document.querySelectorAll('#policiesList .asset-row');
+            const list = [];
+            rows.forEach(row => {
+                const item = {};
+                row.querySelectorAll('input, select, textarea').forEach(input => {
+                    if (input.value.trim()) item[input.name] = input.value.trim();
+                });
+                if (Object.keys(item).length > 0) list.push(item);
+            });
+            return list;
+        }
+
+        collectMedicalRecords() {
+            const rows = document.querySelectorAll('#medicalRecordsList .asset-row');
+            const list = [];
+            rows.forEach(row => {
+                const item = {};
+                row.querySelectorAll('input, textarea').forEach(input => {
+                    if (input.value.trim()) item[input.name] = input.value.trim();
+                });
+                if (Object.keys(item).length > 0) list.push(item);
+            });
+            return list;
+        }
+
+        collectClaimRecords() {
+            const rows = document.querySelectorAll('#claimRecordsList .asset-row');
+            const list = [];
+            rows.forEach(row => {
+                const item = {};
+                row.querySelectorAll('input, select, textarea').forEach(input => {
+                    if (input.value.trim()) item[input.name] = input.value.trim();
+                });
+                if (Object.keys(item).length > 0) list.push(item);
+            });
+            return list;
         }
 
         saveCurrentClient() {
@@ -724,6 +854,18 @@
                 row['创建时间'] = new Date(c.createdAt).toLocaleString('zh-CN');
                 row['更新时间'] = new Date(c.updatedAt).toLocaleString('zh-CN');
                 Object.entries(FIELD_LABELS).forEach(([k, v]) => row[v] = c.data?.[k] || '');
+                if (c.data?.familyMembersList) {
+                    row['家庭成员'] = JSON.stringify(c.data.familyMembersList);
+                }
+                if (c.data?.policiesList) {
+                    row['保单列表'] = JSON.stringify(c.data.policiesList);
+                }
+                if (c.data?.medicalRecordsList) {
+                    row['体检记录'] = JSON.stringify(c.data.medicalRecordsList);
+                }
+                if (c.data?.claimRecordsList) {
+                    row['理赔记录'] = JSON.stringify(c.data.claimRecordsList);
+                }
                 return row;
             });
 
@@ -755,6 +897,19 @@
                         Object.entries(FIELD_LABELS).forEach(([k, v]) => {
                             if (row[v] !== undefined && row[v] !== '') clientData[k] = String(row[v]);
                         });
+                        
+                        if (row['家庭成员']) {
+                            try { clientData.familyMembersList = JSON.parse(row['家庭成员']); } catch (e) {}
+                        }
+                        if (row['保单列表']) {
+                            try { clientData.policiesList = JSON.parse(row['保单列表']); } catch (e) {}
+                        }
+                        if (row['体检记录']) {
+                            try { clientData.medicalRecordsList = JSON.parse(row['体检记录']); } catch (e) {}
+                        }
+                        if (row['理赔记录']) {
+                            try { clientData.claimRecordsList = JSON.parse(row['理赔记录']); } catch (e) {}
+                        }
 
                         if (existingIndex >= 0) {
                             this.clients[existingIndex].data = { ...this.clients[existingIndex].data, ...clientData };
@@ -854,7 +1009,6 @@
         checkQRParams() {
             const params = new URLSearchParams(window.location.search);
             const clientData = params.get('cd');
-            const clientId = params.get('client');
             
             if (clientData) {
                 const decoded = this.decodeClientData(clientData);
@@ -884,24 +1038,8 @@
                     document.querySelector('.main-tab[data-tab="clients"]').style.display = 'none';
                     document.querySelector('.main-tab[data-tab="share"]').style.display = 'none';
                     this.showToast('info', `欢迎，${decoded.data.name || '客户'}！请填写问卷`);
-                    return true;
                 }
             }
-
-            if (clientId) {
-                const client = this.clients.find(c => c.id === clientId);
-                if (client) {
-                    this.currentClientId = clientId;
-                    this.clientMode = true;
-                    this.loadClientToForm();
-                    this.switchTab('questionnaire');
-                    this.updateCurrentClientInfo();
-                    document.querySelector('.main-tab[data-tab="clients"]').style.display = 'none';
-                    document.querySelector('.main-tab[data-tab="share"]').style.display = 'none';
-                    this.showToast('info', `欢迎，${client.data.name || '客户'}！`);
-                }
-            }
-            return false;
         }
 
         showToast(type, message) {
@@ -942,11 +1080,92 @@
             }, 500);
         }
 
-        exportCurrentClient() {
+        addFamilyMemberRow(data = {}) {
+            const container = document.getElementById('familyMembersList');
+            const row = document.createElement('div');
+            row.className = 'asset-row';
+            row.innerHTML = `
+                <div class="form-group"><label>姓名</label><input type="text" name="fmName" value="${data.fmName || ''}" placeholder="请输入姓名"></div>
+                <div class="form-group"><label>年龄</label><input type="number" name="fmAge" value="${data.fmAge || ''}" placeholder="请输入年龄"></div>
+                <div class="form-group"><label>关系</label><input type="text" name="fmRelation" value="${data.fmRelation || ''}" placeholder="如：配偶、子女等"></div>
+                <div class="form-group"><label>社保属性</label><select name="fmSocial"><option value="">请选择</option><option value="已缴纳">已缴纳</option><option value="未缴纳">未缴纳</option><option value="部分缴纳">部分缴纳</option></select></div>
+                <div class="form-group"><label>医保属性</label><select name="fmMedical"><option value="">请选择</option><option value="有">有</option><option value="无">无</option><option value="城乡居民">城乡居民</option></select></div>
+                <div class="form-group"><label>其他社会保险</label><input type="text" name="fmOther" value="${data.fmOther || ''}" placeholder="请输入"></div>
+                <button type="button" class="remove-row-btn" onclick="this.parentElement.remove()"><i class="fas fa-trash"></i></button>
+            `;
+            container.appendChild(row);
+        }
+
+        addPolicyRow(data = {}) {
+            const container = document.getElementById('policiesList');
+            const row = document.createElement('div');
+            row.className = 'asset-row';
+            row.innerHTML = `
+                <div class="form-group"><label>投保人</label><input type="text" name="policyInsurer" value="${data.policyInsurer || ''}" placeholder="请输入投保人"></div>
+                <div class="form-group"><label>被保人</label><input type="text" name="policyInsured" value="${data.policyInsured || ''}" placeholder="请输入被保人"></div>
+                <div class="form-group"><label>保险公司</label><input type="text" name="policyCompany" value="${data.policyCompany || ''}" placeholder="请输入保险公司"></div>
+                <div class="form-group"><label>产品名称</label><input type="text" name="policyProduct" value="${data.policyProduct || ''}" placeholder="请输入产品名称"></div>
+                <div class="form-group"><label>保险属性</label><select name="policyType"><option value="">请选择</option><option value="寿险">寿险</option><option value="重疾">重疾</option><option value="意外">意外</option><option value="医疗">医疗</option><option value="理财">理财</option></select></div>
+                <div class="form-group"><label>保险期间</label><input type="text" name="policyPeriod" value="${data.policyPeriod || ''}" placeholder="如：20年/终身"></div>
+                <div class="form-group"><label>缴费日期</label><input type="date" name="policyPaymentDate" value="${data.policyPaymentDate || ''}"></div>
+                <div class="form-group"><label>缴费金额</label><input type="number" name="policyAmount" step="0.01" value="${data.policyAmount || ''}" placeholder="金额"></div>
+                <div class="form-group"><label>生存金</label><input type="text" name="policySurvival" value="${data.policySurvival || ''}" placeholder="请输入"></div>
+                <div class="form-group" style="grid-column:span 2;"><label>保险内容</label><textarea name="policyContent" placeholder="请描述保险内容">${data.policyContent || ''}</textarea></div>
+                <div class="form-group" style="grid-column:span 2;"><label>其他规则及权益</label><textarea name="policyBenefits" placeholder="请描述其他规则及权益">${data.policyBenefits || ''}</textarea></div>
+                <div class="form-group" style="grid-column:span 2;"><label>备注</label><textarea name="policyNote" placeholder="请输入备注">${data.policyNote || ''}</textarea></div>
+                <button type="button" class="remove-row-btn" onclick="this.parentElement.remove()"><i class="fas fa-trash"></i></button>
+            `;
+            container.appendChild(row);
+        }
+
+        addMedicalRecordRow(data = {}) {
+            const container = document.getElementById('medicalRecordsList');
+            const row = document.createElement('div');
+            row.className = 'asset-row';
+            row.innerHTML = `
+                <div class="form-group"><label>体检时间</label><input type="date" name="medicalDate" value="${data.medicalDate || ''}"></div>
+                <div class="form-group"><label>体检机构</label><input type="text" name="medicalHospital" value="${data.medicalHospital || ''}" placeholder="请输入体检机构"></div>
+                <div class="form-group" style="grid-column:span 2;"><label>异常情况</label><textarea name="medicalAbnormal" placeholder="请描述异常情况">${data.medicalAbnormal || ''}</textarea></div>
+                <div class="form-group" style="grid-column:span 2;"><label>改善建议</label><textarea name="medicalSuggestion" placeholder="请描述改善建议">${data.medicalSuggestion || ''}</textarea></div>
+                <button type="button" class="remove-row-btn" onclick="this.parentElement.remove()"><i class="fas fa-trash"></i></button>
+            `;
+            container.appendChild(row);
+        }
+
+        addClaimRecordRow(data = {}) {
+            const container = document.getElementById('claimRecordsList');
+            const row = document.createElement('div');
+            row.className = 'asset-row';
+            row.innerHTML = `
+                <div class="form-group"><label>病因</label><input type="text" name="claimCause" value="${data.claimCause || ''}" placeholder="请输入病因"></div>
+                <div class="form-group"><label>理赔时间</label><input type="date" name="claimDate" value="${data.claimDate || ''}"></div>
+                <div class="form-group"><label>医院</label><input type="text" name="claimHospital" value="${data.claimHospital || ''}" placeholder="请输入医院"></div>
+                <div class="form-group"><label>类型</label><select name="claimType"><option value="">请选择</option><option value="手术">手术</option><option value="住院">住院</option><option value="门诊">门诊</option></select></div>
+                <div class="form-group" style="grid-column:span 2;"><label>理赔详情</label><textarea name="claimDetails" placeholder="请描述理赔详情">${data.claimDetails || ''}</textarea></div>
+                <button type="button" class="remove-row-btn" onclick="this.parentElement.remove()"><i class="fas fa-trash"></i></button>
+            `;
+            container.appendChild(row);
+        }
+
+        renderDynamicLists() {
             const client = this.getCurrentClient();
-            if (!client) return;
-            this.collectFormData();
-            this.doExport([client], `${client.data.name || '客户'}_问卷数据`);
+            if (!client || !client.data) return;
+
+            const container1 = document.getElementById('familyMembersList');
+            container1.innerHTML = '';
+            (client.data.familyMembersList || []).forEach(item => this.addFamilyMemberRow(item));
+
+            const container2 = document.getElementById('policiesList');
+            container2.innerHTML = '';
+            (client.data.policiesList || []).forEach(item => this.addPolicyRow(item));
+
+            const container3 = document.getElementById('medicalRecordsList');
+            container3.innerHTML = '';
+            (client.data.medicalRecordsList || []).forEach(item => this.addMedicalRecordRow(item));
+
+            const container4 = document.getElementById('claimRecordsList');
+            container4.innerHTML = '';
+            (client.data.claimRecordsList || []).forEach(item => this.addClaimRecordRow(item));
         }
     }
 
