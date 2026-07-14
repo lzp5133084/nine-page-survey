@@ -306,8 +306,7 @@
                     <button class="btn btn-outline" id="prevBtn" onclick="app.prevPage()"><i class="fas fa-chevron-left"></i> 上一页</button>
                     <div style="display:flex;gap:10px;">
                         <button class="btn btn-primary" onclick="app.saveCurrentClient()"><i class="fas fa-save"></i> 保存</button>
-                        <button class="btn btn-success" id="completeBtn" style="display:none;" onclick="app.completeQuestionnaire()"><i class="fas fa-check"></i> 完成</button>
-                        <button class="btn btn-warning" id="submitBtn" style="display:none;" onclick="app.showSubmitQR()"><i class="fas fa-paper-plane"></i> 提交</button>
+                        <button class="btn btn-success" id="completeBtn" style="display:none;" onclick="app.completeQuestionnaire()"><i class="fas fa-check"></i> 完成</button>这么多错误。                        <button class="btn btn-warning" id="submitBtn" style="display:none;" onclick="app.showSubmitQR()"><i class="fas fa-paper-plane"></i> 提交</button>
                     </div>
                     <button class="btn btn-primary" id="nextBtn" onclick="app.nextPage()">下一页 <i class="fas fa-chevron-right"></i></button>
                 </div>
@@ -915,35 +914,32 @@
         }
 
         showSubmitQR() {
-            if (!this.currentClientId) return;
+            if (!this.currentClientId) {
+                this.showToast('error', '请先保存客户信息');
+                return;
+            }
+
             const client = this.collectFormData();
             this.saveClients();
 
-            const baseUrl = window.location.href.split('?')[0].split('#')[0];
-            const encodedData = this.encodeClientData(client);
-            const url = baseUrl + `?cd=${encodedData}`;
-            const container = document.getElementById('submitQRCanvas');
-
-            document.getElementById('submitQRName').textContent = `客户：${client.data.name || '未命名'}`;
-            container.innerHTML = '<p style="color:#94a3b8;">正在生成...</p>';
-            document.getElementById('submitQRModal').classList.add('show');
-
+            this.doExport([client], `${client.data.name || '客户'}_问卷数据`);
+            
             setTimeout(() => {
-                try {
-                    container.innerHTML = '';
-                    new QRCode(container, {
-                        text: url,
-                        width: 200,
-                        height: 200,
-                        colorDark: '#0f172a',
-                        colorLight: '#ffffff',
-                        correctLevel: QRCode.CorrectLevel.M
-                    });
-                } catch (e) {
-                    console.error('提交二维码生成失败:', e);
-                    container.innerHTML = `<p style="color:#ef4444;">生成失败</p>`;
-                }
-            }, 100);
+                const confirmModal = document.getElementById('confirmModal');
+                document.getElementById('modalTitle').textContent = '导出成功';
+                document.getElementById('modalBody').innerHTML = `
+                    <p style="text-align:center;margin-bottom:10px;">问卷已成功导出为Excel文件！</p>
+                    <p style="color:#94a3b8;font-size:14px;text-align:center;">请将Excel文件转发给管理员，<br>管理员可通过"导入Excel"功能导入您的问卷数据。</p>
+                    <p style="color:#00d4ff;font-size:14px;text-align:center;margin-top:15px;">感谢您的填写！</p>
+                `;
+                confirmModal.classList.add('show');
+                
+                const confirmBtn = document.querySelector('#confirmModal .btn-danger');
+                confirmBtn.textContent = '我知道了';
+                confirmBtn.onclick = () => {
+                    confirmModal.classList.remove('show');
+                };
+            }, 500);
         }
 
         exportCurrentClient() {
