@@ -195,9 +195,9 @@
                 </div>
 
                 <div class="stat-cards">
-                    <div class="stat-card"><div class="stat-value" id="totalClients">0</div><div class="stat-label">总客户数</div></div>
-                    <div class="stat-card"><div class="stat-value" id="completedClients">0</div><div class="stat-label">已完成</div></div>
-                    <div class="stat-card"><div class="stat-value" id="pendingClients">0</div><div class="stat-label">进行中</div></div>
+                    <div class="stat-card"><div class="stat-icon"><i class="fas fa-users"></i></div><div class="stat-value" id="totalClients">0</div><div class="stat-label">总客户数</div></div>
+                    <div class="stat-card"><div class="stat-icon"><i class="fas fa-check-circle"></i></div><div class="stat-value" id="completedClients">0</div><div class="stat-label">已完成</div></div>
+                    <div class="stat-card"><div class="stat-icon"><i class="fas fa-clock"></i></div><div class="stat-value" id="pendingClients">0</div><div class="stat-label">进行中</div></div>
                 </div>
 
                 <div class="filter-bar">
@@ -618,7 +618,8 @@
                     const inputs = form.querySelectorAll(`[name="${k}"]`);
                     inputs.forEach(input => {
                         if (input.type === 'checkbox') {
-                            input.checked = (v || '').includes(input.value);
+                            const vals = (v || '').split(',');
+                            input.checked = vals.includes(input.value);
                         } else {
                             input.value = v;
                         }
@@ -1164,6 +1165,8 @@
                 <button type="button" class="remove-row-btn" onclick="this.parentElement.remove()"><i class="fas fa-trash"></i></button>
             `;
             container.appendChild(row);
+            if (data.fmSocial) row.querySelector('[name="fmSocial"]').value = data.fmSocial;
+            if (data.fmMedical) row.querySelector('[name="fmMedical"]').value = data.fmMedical;
         }
 
         addPolicyRow(data = {}) {
@@ -1186,6 +1189,7 @@
                 <button type="button" class="remove-row-btn" onclick="this.parentElement.remove()"><i class="fas fa-trash"></i></button>
             `;
             container.appendChild(row);
+            if (data.policyType) row.querySelector('[name="policyType"]').value = data.policyType;
         }
 
         addMedicalRecordRow(data = {}) {
@@ -1215,27 +1219,28 @@
                 <button type="button" class="remove-row-btn" onclick="this.parentElement.remove()"><i class="fas fa-trash"></i></button>
             `;
             container.appendChild(row);
+            if (data.claimType) row.querySelector('[name="claimType"]').value = data.claimType;
         }
 
         renderDynamicLists() {
             const client = this.getCurrentClient();
-            if (!client || !client.data) return;
+            const data = (client && client.data) || {};
 
             const container1 = document.getElementById('familyMembersList');
             container1.innerHTML = '';
-            (client.data.familyMembersList || []).forEach(item => this.addFamilyMemberRow(item));
+            (data.familyMembersList || []).forEach(item => this.addFamilyMemberRow(item));
 
             const container2 = document.getElementById('policiesList');
             container2.innerHTML = '';
-            (client.data.policiesList || []).forEach(item => this.addPolicyRow(item));
+            (data.policiesList || []).forEach(item => this.addPolicyRow(item));
 
             const container3 = document.getElementById('medicalRecordsList');
             container3.innerHTML = '';
-            (client.data.medicalRecordsList || []).forEach(item => this.addMedicalRecordRow(item));
+            (data.medicalRecordsList || []).forEach(item => this.addMedicalRecordRow(item));
 
             const container4 = document.getElementById('claimRecordsList');
             container4.innerHTML = '';
-            (client.data.claimRecordsList || []).forEach(item => this.addClaimRecordRow(item));
+            (data.claimRecordsList || []).forEach(item => this.addClaimRecordRow(item));
         }
     }
 
