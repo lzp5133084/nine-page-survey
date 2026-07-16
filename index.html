@@ -744,6 +744,63 @@
             this.renderClientTable();
             this.updateStats();
             this.showToast('success', '保存成功！');
+
+            this.showSaveSuccessModal(client);
+        }
+
+        showSaveSuccessModal(client) {
+            const modal = document.getElementById('confirmModal');
+            const name = client.data.name || '客户';
+            const total = Object.keys(FIELD_LABELS).length;
+            const filled = Object.keys(client.data).length;
+            const progress = Math.round((filled / total) * 100);
+
+            document.getElementById('modalTitle').textContent = '保存成功';
+            document.getElementById('modalBody').innerHTML = `
+                <div style="text-align:center;">
+                    <div style="font-size:3em;color:#10b981;margin-bottom:15px;"><i class="fas fa-check-circle"></i></div>
+                    <p style="font-size:1.1em;margin-bottom:10px;"><strong>${name}</strong> 的问卷已成功保存</p>
+                    <p style="color:#94a3b8;font-size:14px;margin-bottom:15px;">当前完成度：<span style="color:#00d4ff;font-weight:600;">${progress}%</span></p>
+                    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:20px;">
+                        <button class="btn btn-success" onclick="app.exportCurrentAndClose('${client.id}')" style="flex:1;min-width:120px;">
+                            <i class="fas fa-file-excel"></i> 导出Excel
+                        </button>
+                        <button class="btn btn-primary" onclick="app.closeModal('confirmModal')" style="flex:1;min-width:120px;">
+                            <i class="fas fa-edit"></i> 继续填写
+                        </button>
+                    </div>
+                    ${this.clientMode ? `
+                    <div style="margin-top:15px;">
+                        <button class="btn btn-warning" onclick="app.submitAndExport('${client.id}')" style="width:100%;">
+                            <i class="fas fa-paper-plane"></i> 提交并导出（发给管理员）
+                        </button>
+                    </div>
+                    ` : ''}
+                </div>
+            `;
+            modal.classList.add('show');
+
+            const confirmBtn = document.querySelector('#confirmModal .btn-danger');
+            confirmBtn.style.display = 'none';
+            const cancelBtn = document.querySelector('#confirmModal .btn-outline');
+            cancelBtn.style.display = 'none';
+        }
+
+        exportCurrentAndClose(clientId) {
+            const client = this.clients.find(c => c.id === clientId);
+            if (client) {
+                this.doExport([client], client.data.name || '客户');
+            }
+            this.closeModal('confirmModal');
+        }
+
+        submitAndExport(clientId) {
+            const client = this.clients.find(c => c.id === clientId);
+            if (client) {
+                this.doExport([client], client.data.name || '客户');
+            }
+            this.closeModal('confirmModal');
+            this.showToast('info', '已导出，请将Excel文件发给管理员');
         }
 
         completeQuestionnaire() {
@@ -902,6 +959,14 @@
 
         closeModal(id) {
             document.getElementById(id).classList.remove('show');
+            if (id === 'confirmModal') {
+                const confirmBtn = document.querySelector('#confirmModal .btn-danger');
+                const cancelBtn = document.querySelector('#confirmModal .btn-outline');
+                confirmBtn.style.display = '';
+                cancelBtn.style.display = '';
+                confirmBtn.textContent = '确认';
+                confirmBtn.onclick = function() { app.confirmAction(); };
+            }
         }
 
         updateStats() {
@@ -1020,9 +1085,8 @@
         encodeClientData(client) {
             const payload = {
                 id: client.id,
-                name: client.data?.name || '',
-                phone: client.data?.phone || '',
-                data: client.data || {}
+                n: client.data?.name || '',
+                p: client.data?.phone || ''
             };
             try {
                 return btoa(encodeURIComponent(JSON.stringify(payload)));
@@ -1033,10 +1097,18 @@
 
         decodeClientData(encoded) {
             try {
-                return JSON.parse(decodeURIComponent(atob(encoded)));
+                const obj = JSON.parse(decodeURIComponent(atob(encoded)));
+                return {
+                    id: obj.id,
+                    data: { name: obj.n || '', phone: obj.p || '' }
+                };
             } catch (e1) {
                 try {
-                    return JSON.parse(decodeURIComponent(encoded));
+                    const obj = JSON.parse(decodeURIComponent(encoded));
+                    return {
+                        id: obj.id,
+                        data: { name: obj.n || '', phone: obj.p || '' }
+                    };
                 } catch (e2) {
                     return null;
                 }
@@ -1052,29 +1124,31 @@
 
             const baseUrl = window.location.href.split('?')[0].split('#')[0];
             const encodedData = this.encodeClientData(client);
-            const url = baseUrl + `?cd=${encodedData}`;
+            const url = baseUrl + '?cd=' + encodedData;
             const container = document.getElementById('clientQRCanvas');
             
-            container.innerHTML = '<p style="color:#94a3b8;">正在生成...</p>';
-            document.getElementById('clientQRName').textContent = `客户：${client.data.name || '未命名'}`;
+            container.innerHTML = '<p style="color:#94a3b8;font-size:13px;">正在生成...</p>';
+            document.getElementById('clientQRName').textContent = '客户：' + (client.data.name || '未命名');
             document.getElementById('clientQRModal').classList.add('show');
 
-            setTimeout(() => {
+            const self = this;
+            setTimeout(function() {
                 try {
                     container.innerHTML = '';
                     new QRCode(container, {
                         text: url,
-                        width: 180,
-                        height: 180,
+                        width: 200,
+                        height: 200,
                         colorDark: '#0f172a',
                         colorLight: '#ffffff',
-                        correctLevel: QRCode.CorrectLevel.M
+                        correctLevel: QRCode.CorrectLevel.L
                     });
                 } catch (e) {
                     console.error('客户二维码生成失败:', e);
-                    container.innerHTML = `<p style="color:#ef4444;">生成失败: ${e.message}</p>`;
+                    container.innerHTML = '<p style="color:#ef4444;font-size:13px;">生成失败: ' + e.message + '</p>';
+                    self.showToast('error', '二维码生成失败');
                 }
-            }, 100);
+            }, 200);
         }
 
         checkQRParams() {
